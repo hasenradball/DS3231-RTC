@@ -142,7 +142,8 @@ Readers may choose to search online for more information.
 **REMARK**:<br>
 It is highly recommended to check which batterie/accumulator is placed in the DS3231 module!<br>
 If the module is connected to 5V it normally charges the accumulator, and when a normal battery is used this can cause issues.<br>
-For the use with a battery e.g.: `CR2032`, please desolder the 200 Ohm resistor to deactivate the charging mechanism.
+For the use with a battery e.g.: `CR2032`, please desolder the 200 Ohm resistor to deactivate the charging mechanism.<br>
+See for an example a corresponding link [DS3231-battery-problem](https://320volt.com/en/ds3231-cr2032-battery-problem-and-solution/)
 
 [back to top](#ds3231_rtc-library)
 <hr>
