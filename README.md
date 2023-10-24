@@ -331,19 +331,18 @@ Please read [CONTRIBUTING.md](https://github.com/hasenradball/DS3231_RTC/blob/ma
 ## Credits
 This library is in the first shot based on [A. Wickerts'](https://github.com/NorthernWidget/DS3231) library and then refractured.
 
-The author of this library is F. Häfele <info@hasenradball.com>
+The author of this library is F. Häfele <mail@frankhaefele.de>
 
 Based on previous work by:
 
 - A. Wickert
-- D. IoWa
 
 [back to top](#ds3231_rtc-library)
 <hr>
 
 ## License
 
-DS3231 is licensed under [The Unlicense](https://github.com/hasenradball/DS3231_RTC/blob/master/LICENSE).
+DS3231 is licensed under [MIT License](https://github.com/hasenradball/DS3231_RTC/blob/master/LICENSE).
 
 [back to top](#ds3231_rtc-library)
 <hr>

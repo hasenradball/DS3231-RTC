@@ -99,14 +99,9 @@ class DS3231 {
         
         TwoWire &_Wire;
 
-        // Time-retrieval functions
-
-        // the getter functions retrieve current values of the registers.
-        byte getRegisterValue() {
-            _Wire.requestFrom(CLOCK_ADDRESS, 1);
-            return bcdToDec(_Wire.read());
-        }
-
+        // ************************************
+        //      Time-retrieval functions
+        // ************************************
         byte getSecond();
         byte getMinute();
 
@@ -245,6 +240,12 @@ class DS3231 {
 
 
     private:
+        // the getter functions retrieve current values of the registers.
+        byte getRegisterValue() {
+            _Wire.requestFrom(CLOCK_ADDRESS, 1);
+            return bcdToDec(_Wire.read());
+        }
+
         // Convert normal decimal numbers to binary coded decimal
         byte decToBcd(byte val);
         // Convert binary coded decimal to normal decimal numbers
