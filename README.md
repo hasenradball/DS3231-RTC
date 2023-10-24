@@ -23,7 +23,8 @@ This library was based on the master branch of [NorthernWidget/DS3231](https://g
 ## Contents
 
 * [Summary](#summary)
-* [About the DS3231](#about-the-ds3231)
+* [About the DS3231](#about-the-ds3231-module)
+    * [The DS3231 Battery Problem](#the-ds3231-battery-problem)
 * [How to Install the Library](#installation)
 * [Functions Provided in the Library](#functions)
 * [Examples of Using the Library](#examples-of-use)
@@ -139,7 +140,7 @@ One point regarding the choice of battery may deserve consideration:<br>
 The question of whether to install a rechargeable coin battery, or to disable the charging circuit if such a thing is provided on the module being used. The topic is controversial and the authors of this Library do not express any opinion about it.<br>
 Readers may choose to search online for more information.
 
-**REMARK**:<br>
+#### The DS3231 Battery Problem:<br>
 It is highly recommended to check which batterie/accumulator is placed in the DS3231 module!<br>
 If the module is connected to 5V it normally charges the accumulator, and when a normal battery is used this can cause issues.<br>
 For the use with a battery e.g.: `CR2032`, please desolder the 200 Ohm resistor to deactivate the charging mechanism.<br>
