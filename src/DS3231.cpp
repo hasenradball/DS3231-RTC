@@ -12,6 +12,40 @@
 #include <pgmspace.h>
 #endif
 
+
+/**
+ * @brief function which calculates if a year is a leap year
+ * 
+ * @param year 
+ * @return true 
+ * @return false 
+ */
+bool isleapYear(const int16_t year) {
+    // check if divisible by 4
+    if(year % 4) {
+        return false;
+    }
+    // only check other, when first failed
+    return (year % 100 || year % 400 == 0);
+}
+
+/**
+ * @brief calculate the days since January 1 (0...365)
+ * 
+ * @param year e.g.: 2022
+ * @param month 1...12
+ * @param day 1...31
+ * @return int16_t 
+ */
+int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t day) {
+    uint16_t days = day - 1;
+    for (uint8_t i = 1; i < month; ++i)
+        days += pgm_read_byte(daysInMonth + i - 1);
+    if (month > 2 && isleapYear(year))
+        ++days;
+    return days;
+}
+
 /**
  * @brief Construct a new DS3231::DS3231 object
  * 
@@ -27,17 +61,6 @@ DS3231::DS3231() : _Wire(Wire) {
  */
 DS3231::DS3231(TwoWire &twowire) : _Wire(twowire) {
 }
-
-/*****************************************
-	Public Functions
- *****************************************/
-
-/*******************************************************************************
- * TO GET ALL DATE/TIME INFORMATION AT ONCE AND AVOID THE CHANCE OF ROLLOVER
- * DateTime implementation spliced in here from Jean-Claude Wippler's (JeeLabs)
- * RTClib, as modified by Limor Fried (Ladyada); source code at:
- * https://github.com/adafruit/RTClib
- ******************************************************************************/
 
 /**
  * @brief Construct a new Date Time:: Date Time object
@@ -70,8 +93,8 @@ DateTime::DateTime(int16_t year, int8_t month, int8_t day, int8_t hour, int8_t m
     _tm.tm_mday = day;
     _tm.tm_mon = month-1;
     _tm.tm_year = year-1900;
-    _tm.tm_yday = yday;
     _tm.tm_wday = wday-1;
+    _tm.tm_yday = yday;
     _tm.tm_isdst = dst;
 
     set_timstamps();
@@ -99,6 +122,7 @@ DateTime::DateTime(const char *date, const char *time) {
     _tm.tm_hour = hour;
     _tm.tm_min = min;
     _tm.tm_sec = sec;
+    _tm.tm_yday = calcYearDay(year, month, day);
     set_timstamps();
 }
 
@@ -155,8 +179,8 @@ DateTime RTClib::now(TwoWire & _Wire) {
     int8_t day = bcd2bin(_Wire.read());
     int8_t month = bcd2bin(_Wire.read());
     int16_t year = bcd2bin(_Wire.read()) + 2000;
-    int16_t yday = 0;
-    int16_t dst = 0;
+    int16_t yday = calcYearDay(year, month, day);
+    int16_t dst = -1;
 
     // add yday and DST calculation if needed
     // use the complete set also yday and dst to keep in mind the parameters

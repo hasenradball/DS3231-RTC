@@ -42,8 +42,10 @@
 // utility code, some of this could be exposed in the DateTime API if needed
 // DS3231 is smart enough to know this, but keeping it for now so I don't have
 // to rewrite their code. -ADW
-static const uint8_t daysInMonth [] PROGMEM = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+static const uint8_t daysInMonth[] PROGMEM = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
+bool isleapYear(const uint16_t year);
+int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t day);
 
 // DateTime class restructured by using standardized time functions
 class DateTime {
@@ -52,7 +54,7 @@ class DateTime {
 
 	    DateTime ( 	int16_t year, int8_t month, int8_t mday,
                     int8_t hour = 0, int8_t min = 0, int8_t sec = 0,
-                    int8_t wday = 0, int16_t yday = 0, int16_t dst = 0);
+                    int8_t wday = 0, int16_t yday = 0, int16_t dst = -1);
     
         DateTime (const char *date, const char *time);
         
@@ -63,6 +65,7 @@ class DateTime {
         int8_t getMinute()  const   { return _tm.tm_min; }
         int8_t getSecond()  const   { return _tm.tm_sec; }
         int8_t getWeekDay() const	{ return _tm.tm_wday; }
+        int16_t getYearDay() const	{ return _tm.tm_yday; }
         int16_t getDST()    const   { return _tm.tm_isdst; }
         size_t show_DateTime(char *buffer, size_t buffersize, const char *formatSpec = "%a %h %d %T %Y");
 
@@ -77,7 +80,7 @@ class DateTime {
     
     private:
         void set_timstamps();
-    
+
     protected:
         time_t _unix_timestamp;
         time_t _y2k_timestamp;
