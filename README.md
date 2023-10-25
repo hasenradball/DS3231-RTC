@@ -1,5 +1,5 @@
 # DS3231_RTC Library
-An Arduino library for the DS3231 real-time clock (RTC).  
+The **great** C++ Library for the DS3231 real-time clock (RTC) module.  
 
 ## Description
 The library provides easy-to-use methods to:
@@ -13,7 +13,7 @@ This document explains the installation and usage of the Library with the Arduin
 
 You do have to install the Library in your Arduino IDE environment before you can use it. Installation instructions are provided, below.
 
-REMARK:<br>
+**REMARK**:<br>
 This library was based on the master branch of [NorthernWidget/DS3231](https://github.com/NorthernWidget/DS3231) Library in Oct/2023. It was reworked and refractured with respect of the following main topics:
 * using standardized functions of the `time.h` library.
 * introduce a `struct tm` which holds all relevant date and time values.
@@ -65,7 +65,7 @@ DS3231 myRTC;
 ```
 Wire.begin();
 ```
-or like for the ESP8266 for example
+or for the **ESP8266** like:
 ```
 Wire.begin(SDA, SCL);
 ```
@@ -83,7 +83,7 @@ The Library incorporates two other classes to assist with managing `date` and `t
 * `DateTime` class enables a object for managing date and time data.
 * `RTClib` class institutes a convenient `RTClib::now()` function for receiving a date/time snapshot, as a DateTime object, from the DS3231 device.
 
-The `DateTime` class can instanciated by a specific date and time in three different ways:
+The `DateTime` class can be instanciated by a specific date and time in three different ways:
 
 * 1.) by distinct values for:<br>
 year, month, day, hour, minute and second
@@ -92,16 +92,16 @@ year, month, day, hour, minute and second
     
 * 2.) by a single, `time_t` unix timestamp.<br>
 
-* 3.) by giving a separate const char *string for Date and Time like:<br>
+* 3.) by giving a separate `const char *` string for Date and Time like:<br>
 `"Feb 16 2022"` and `"14:05:00"`<br>
 This can be also achived by usage on the precomoiler Tags `__DATE__` and `__TIME__`.
 
 
 
 ## About the DS3231 Module
-The DS3231 module is a low-cost integrated circuit (IC) providing a highly accurate, real time clock for use with Arduino, ESP8266, ESP32, Raspberry Pi, BBC micro:bit and other popular small computing devices. 
+The DS3231 module is a low-cost integrated circuit (IC) providing a highly accurate, real time clock for use with Arduino, ESP8266, ESP32, Raspberry Pi and other popular small computing devices. 
 
-The IC is typically mounted on a circuit board or module, along with other hardware, such as header pins, supportive electrical components, and even EEPROM memory chips, for convenient attachment to a breadboard or an Arduino. 
+The IC is typically mounted on a circuit board, along with other hardware, such as header pins, supportive electrical components, and even EEPROM memory chips, for convenient attachment to a breadboard or an Arduino. 
 
 Several different modules are available from a number of competing vendors. This Library aspires to work with any DS3231 module that supports I2C communications with the IC.
 
@@ -119,32 +119,38 @@ According to the [DS3231-datasheet](https://datasheets.maximintegrated.com/en/ds
 * Month,  and
 * Year, with Leap-Year Compensation Valid Up to 2100"
 
-Data for the time and date are stored in registers (memory locations) on the DS3231. Each, distinct value is stored separately. This means the seconds are in one register, the minutes in another, and so on. The DS3231 updates the values in the date and time registers every second.
+Data for the time and date are stored in registers on the DS3231. Each, distinct value is stored separately. This means the seconds are in one register, the minutes in another, and so on. The DS3231 updates the values in the date and time registers every second.
 
-The device keeps track of time by operating its own 32.768 kHz crystal oscillator, similar to the timekeeper in an electronic watch. Temperature can affect oscillator speed. Accordingly, the DS3231 takes further steps to maintain accuracy. It senses the temperature around the crystal and adjusts the speed of the oscillator.
-
+The device keeps track of time by operating its own 32.768 kHz crystal oscillator, similar to the timekeeper in an electronic watch. Temperature can affect oscillator speed. Accordingly, the DS3231 takes further steps to maintain accuracy. It senses the temperature around the crystal and adjusts the speed of the oscillator.<br>
 The oscillator can be accessed directly, independent of the date and time registers, for use as an external timer or source of interrupts.
 
-The temperature can be read from the DS3231 using a Library function. The data sheet declares it to be accurate to within 3 degrees, Celsius. 
+The temperature can be read from the DS3231 using a class member function. The data sheet declares it to be accurate to within 3 degrees, Celsius. 
 
 
 ### Power Supply and Battery Backup
-The DS3231 can run in a range between 2.3 volts and 5.5 volts. The device actually has two power supply pins: the primary source, V<sub>CC</sub>, and a secondary, backup source, V<sub>BAT</sub>.
+The DS3231 can run in a range between 2.3 V and 5.5 V. The device actually has two power supply pins:<br>
+* the primary source V<sub>CC</sub>
+* a secondary, backup source V<sub>BAT</sub>
 
-Some popular modules mounting a DS3231 provide a receptacle for a coin battery, attaching it to the V<sub>BAT</sub> pin. If a sufficiently-charged battery is present, the DS3231 will switch automatically to the battery after detecting a drop in V<sub>CC</sub> voltage below a certain "power-fail" level.
+Some popular DS3231 modules mounting, provide a receptacle for a coin battery (CR2032), attaching it to the V<sub>BAT</sub> pin. If a sufficiently-charged battery is present, the DS3231 will switch automatically to the battery after detecting a drop in V<sub>CC</sub> voltage below a certain "power-fail" level.
 
 It will switch back to V<sub>CC</sub> automatically, if and when that voltage rises back up above both the power-fail and the battery voltage level. 
 
 **REMARK**:<br>
 One point regarding the choice of battery may deserve consideration:<br>
-The question of whether to install a rechargeable coin battery, or to disable the charging circuit if such a thing is provided on the module being used. The topic is controversial and the authors of this Library do not express any opinion about it.<br>
-Readers may choose to search online for more information.
+The question of whether to install a **rechargeable** coin battery, or to disable the charging circuit if a **nonrechargeable** battery provided on the module being used.<br>
+
 
 #### The DS3231 Battery Problem:<br>
-It is highly recommended to check which batterie/accumulator is placed in the DS3231 module!<br>
+It is highly recommended to check which battery/accumulator is placed on the DS3231 module!<br>
 If the module is connected to 5V it normally charges the accumulator, and when a normal battery is used this can cause issues.<br>
-For the use with a battery e.g.: `CR2032`, please desolder the 200 Ohm resistor to deactivate the charging mechanism.<br>
-See for an example a corresponding link [DS3231-battery-problem](https://320volt.com/en/ds3231-cr2032-battery-problem-and-solution/)
+Like:
+* battery look inflated
+* battery can swell
+
+For the use with a battery e.g.: `CR2032`, please desolder the **200 Ohm resistor** to deactivate the charging mechanism.<br>
+See the corresponding link for the problem description in detail:<br>
+[DS3231-battery-problem](https://320volt.com/en/ds3231-cr2032-battery-problem-and-solution/)
 
 [back to top](#ds3231_rtc-library)
 <hr>
@@ -171,13 +177,14 @@ See for an example a corresponding link [DS3231-battery-problem](https://320volt
 The user must also ensure that two, other, required libraries are available to the Arduino IDE. This DS3231 library takes care to `#include`  the following in a program, but it does not install them in your Arduino IDE:
 
 * `Wire.h` : a widely-used Arduino library for I2C twowire communications
-* `time.h` : a modified C language header file to the corresponding microcontroller based tiome lib functions
+* `time.h` : a modified C language header file to the corresponding microcontroller based time lib functions
 
 **Remark**:<br>
 the AVR lib `time.h` is based on year 2000 against the c-standard libs are based on year 1970.<br>
 See [AVR-libc Time](https://www.nongnu.org/avr-libc/user-manual/group__avr__time.html)
 
-Note: At the time of writing, both of these libraries were included by default with a standard installation of the 1.8.x version of Arduino IDE for AVR-based devices.
+Note:<br>
+At the time of writing, both of these libraries were included by default with a standard installation of the 1.8.x version of Arduino IDE for AVR-based devices.
 
 A simple way to check for the availability of the two libraries is to compile the following, blank Arduino sketch. If the IDE does not complain that anything is missing, then the required libraries are available for use with this DS3231 library.
 
@@ -293,11 +300,11 @@ see [Definiton of struct tm](https://en.cppreference.com/w/c/chrono/tm).
 There are many examples provided in the [examples](https://github.com/hasenradball/DS3231_RTC/tree/master/examples) folder of this repository.<br>
 At the time of writing the examples include:
 
-* `*set*`: demonstrates selected time-setting functions
-* `*test*`: demonstrates selected time-reading functions
-* `*echo*`: demonstrates setting the time and date then reading it back
-* `*echo_time*`: similar to *echo*, demonstrates setting and reading time/date data
-* `*oscillator_test*`: demonstrates advanced techniques for managing and using the DS3231 device as a pulse generator
+* `set`: demonstrates selected time-setting functions
+* `test`: demonstrates selected time-reading functions
+* `echo`: demonstrates setting the time and date then reading it back
+* `echo_time`: similar to *echo*, demonstrates setting and reading time/date data
+* `oscillator_test`: demonstrates advanced techniques for managing and using the DS3231 device as a pulse generator
 
 Future development plans include updating these examples and adding more of them.
 
