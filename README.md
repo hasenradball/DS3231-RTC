@@ -167,7 +167,7 @@ See the corresponding link for the problem description in detail:<br>
 
 ### Second Method
 
-1. Navigate to the [Releases page](https://github.com/hasenradball/DS3231_RTC/releases).
+1. Navigate to the [Releases page](https://github.com/hasenradball/DS3231-RTC/releases).
 1. Download the latest release.
 1. Extract the zip file
 1. In the Arduino IDE, navigate to Sketch > Include Library > Add .ZIP Library
@@ -199,71 +199,71 @@ void loop() {}
 <hr>
 
 ## Functions
-Readers are encouraged to visit the [Documentation folder](https://github.com/hasenradball/DS3231_RTC/tree/master/Documentation) for detailed information about the functions in this Library. Additional information is available in the [Examples of Use](#examples-of-use) described below, and in the code source files of this repository:
+Readers are encouraged to visit the [Documentation folder](https://github.com/hasenradball/DS3231-RTC/tree/master/Documentation) for detailed information about the functions in this Library. Additional information is available in the [Examples of Use](#examples-of-use) described below, and in the code source files of this repository:
 
-* [DS3231_RTC.h](https://github.com/hasenradball/DS3231_RTC/blob/master/src/DS3231_RTC.h)
-* [DS3231_RTC.cpp](https://github.com/hasenradball/DS3231_RTC/blob/master/src/DS3231_RTC.cpp)
+* [DS3231_RTC.h](https://github.com/hasenradball/DS3231-RTC/blob/master/src/DS3231_RTC.h)
+* [DS3231_RTC.cpp](https://github.com/hasenradball/DS3231-RTC/blob/master/src/DS3231_RTC.cpp)
 
-### [Read the Date or Time](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md)
-- [RTClib::now() <sup>\*</sup>](https://github.com/hasenradball/DS3231_RTC#the-special-rtclibnow-function-)
-- [getSecond()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md#getsecond)
-- [getMinute()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md#getminute)
-- [getHour(bool, bool)](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md#gethour)
-- [getDoW()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md#getdow)
-- [getDate()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md#getdate)
-- [getMonth(bool)](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md#getmonth)
-- [getYear()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md#getyear)
+### [Read the Date or Time](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md)
+- [RTClib::now() <sup>\*</sup>](https://github.com/hasenradball/DS3231-RTC#the-special-rtclibnow-function-)
+- [getSecond()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md#getsecond)
+- [getMinute()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md#getminute)
+- [getHour(bool, bool)](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md#gethour)
+- [getDoW()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md#getdow)
+- [getDate()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md#getdate)
+- [getMonth(bool)](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md#getmonth)
+- [getYear()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md#getyear)
 
 \* The *RTClib::now()* function is not accessed through the DS3231 object. Rather, it has a very specific syntax as described below in <a href="#RTClib_now_function">The Special RTClib::now() Function</a>.
 
 
-### [Set the Date or Time](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md)
+### [Set the Date or Time](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md)
 We emphasize here and elsewhere that the code writer bears responsibility to ensure that the values passed into the following functions fall within the valid range, as specified in the documentation for each function.
 
 Unexpected values in the DS3231 hardware registers may follow from the insertion of an invalid parameter into any one of these functions.
 
-- [setEpoch()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-setepochtime_t-epoch--0-bool-flag_localtime--false)
-- [setSecond()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-setsecondbyte-second)
-- [setMinute()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-setminutebyte-minute)
-- [setHour()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-sethourbyte-hour)
-- [setDoW()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-setdowbyte-dow)
-- [setDate()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-setdatebyte-date)
-- [setMonth()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-setmonthbyte-month)
-- [setYear()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-setyearbyte-year)
-- [setClockMode()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Set.md#void-setclockmodebool-h12)
+- [setEpoch()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-setepochtime_t-epoch--0-bool-flag_localtime--false)
+- [setSecond()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-setsecondbyte-second)
+- [setMinute()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-setminutebyte-minute)
+- [setHour()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-sethourbyte-hour)
+- [setDoW()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-setdowbyte-dow)
+- [setDate()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-setdatebyte-date)
+- [setMonth()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-setmonthbyte-month)
+- [setYear()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-setyearbyte-year)
+- [setClockMode()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Set.md#void-setclockmodebool-h12)
 
-### [Set, Clear and Check Alarms](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md)
+### [Set, Clear and Check Alarms](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md)
 The following functions set and retrieve time and date values in the DS3231 hardware alarm registers. 
 
-Parameters include a special 8-bit value named "AlarmBits". Readers may find additional information about it at the following links: [Alarm Bits Quick Reference](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#alarm-bits-quick-reference), and [Alarm Bits in Detail](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#alarm-bits-in-detail).
+Parameters include a special 8-bit value named "AlarmBits". Readers may find additional information about it at the following links: [Alarm Bits Quick Reference](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#alarm-bits-quick-reference), and [Alarm Bits in Detail](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#alarm-bits-in-detail).
 
-- [getA1Time()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#geta1time)
-- [getA1Time() with Option](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#geta1time-with-option)
-- [getA2Time()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#geta2time)
-- [getA2Time() with Option](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#geta2time-with-option)
-- [setA1Time()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#seta1time)
-- [setA2Time()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#seta2time)
+- [getA1Time()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#geta1time)
+- [getA1Time() with Option](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#geta1time-with-option)
+- [getA2Time()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#geta2time)
+- [getA2Time() with Option](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#geta2time-with-option)
+- [setA1Time()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#seta1time)
+- [setA2Time()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#seta2time)
 
 The remaining functions in this group set and retrieve certain flags in the DS3231 hardware that govern or report the operation of the alarms.
 
-- [turnOnAlarm()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#turnonalarm)
-- [turnOffAlarm()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#turnoffalarm)
-- [checkAlarmEnabled()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#checkalarmenabled)
-- [checkIfAlarm()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#checkifalarm)
-- [checkIfAlarm() with Option](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Alarms.md#checkifalarm-with-option)
+- [turnOnAlarm()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#turnonalarm)
+- [turnOffAlarm()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#turnoffalarm)
+- [checkAlarmEnabled()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#checkalarmenabled)
+- [checkIfAlarm()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#checkifalarm)
+- [checkIfAlarm() with Option](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Alarms.md#checkifalarm-with-option)
 
-### [Manage DS3231 Hardware](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Utilities.md)
+### [Manage DS3231 Hardware](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Utilities.md)
 The functions in this group support uses for a DS3231 other than as an alarm clock.
 
-- [getTemperature()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Utilities.md#gettemperature)
-- [enableOscillator()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Utilities.md#enableoscillator)
-- [enable32kHz()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Utilities.md#enable32khz)
-- [oscillatorCheck()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Utilities.md#oscillatorcheck)
+- [getTemperature()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Utilities.md#gettemperature)
+- [enableOscillator()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Utilities.md#enableoscillator)
+- [enable32kHz()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Utilities.md#enable32khz)
+- [oscillatorCheck()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Utilities.md#oscillatorcheck)
 
-### [DateTime Object](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/DateTime.md)
+### [DateTime Object](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/DateTime.md)
 A DateTime class is defined in this DS3231_RTC.h library. The link, above, provides more information about the class. 
 
-[Retrieving Date and Time Data](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/DateTime.md#retrieving-date-and-time-data)<br>
+[Retrieving Date and Time Data](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/DateTime.md#retrieving-date-and-time-data)<br>
 further lists the DateTime class methods (for Documentation look into the src file): 
 
 - getYear()
@@ -297,7 +297,7 @@ see [Definiton of struct tm](https://en.cppreference.com/w/c/chrono/tm).
 
 ## Examples of Use
 
-There are many examples provided in the [examples](https://github.com/hasenradball/DS3231_RTC/tree/master/examples) folder of this repository.<br>
+There are many examples provided in the [examples](https://github.com/hasenradball/DS3231-RTC/tree/master/examples) folder of this repository.<br>
 At the time of writing the examples include:
 
 * `set`: demonstrates selected time-setting functions
@@ -330,7 +330,7 @@ If you want to contribute to this project:
 - Tell others about this library
 - Contribute new protocols
 
-Please read [CONTRIBUTING.md](https://github.com/hasenradball/DS3231_RTC/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/hasenradball/DS3231-RTC/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 [back to top](#ds3231_rtc-library)
 <hr>
@@ -349,7 +349,7 @@ Based on previous work by:
 
 ## License
 
-DS3231 is licensed under [MIT License](https://github.com/hasenradball/DS3231_RTC/blob/master/LICENSE).
+DS3231 is licensed under [MIT License](https://github.com/hasenradball/DS3231-RTC/blob/master/LICENSE).
 
 [back to top](#ds3231_rtc-library)
 <hr>
