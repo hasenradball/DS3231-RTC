@@ -48,7 +48,7 @@ int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t day) {
 
 /**
  * @brief Construct a new DS3231::DS3231 object
- * 
+ * initialize the internal _Wire with the Wire object
  */
 DS3231::DS3231() : _Wire(Wire) {
 	// nothing to do for this constructor.
@@ -100,7 +100,6 @@ DateTime::DateTime(int16_t year, int8_t month, int8_t day, int8_t hour, int8_t m
     set_timstamps();
 }
 
-
 /**
  * @brief Construct a new Date Time:: Date Time object by givin the precompiler marcos
  * as __DATE__ and __TIME__
@@ -127,7 +126,7 @@ DateTime::DateTime(const char *date, const char *time) {
 }
 
 /**
- * @brief set_timstamps fom struct tm entries
+ * @brief Set the timestamps by using struct tm entries
  * 
  */
 void DateTime::set_timstamps() {
@@ -164,8 +163,8 @@ static uint8_t bcd2bin (uint8_t val) {
 }
 
 DateTime RTClib::now(TwoWire & _Wire) {
-    _Wire.beginTransmission(CLOCK_ADDRESS);
     // This is the first register address (Seconds)
+    _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0);
     // We'll read from here on for 7 bytes from registers:
     // seconds, minutes, hours, day(1...7), date(1...31), month, year.
@@ -182,11 +181,16 @@ DateTime RTClib::now(TwoWire & _Wire) {
     int16_t yday = calcYearDay(year, month, day);
     int16_t dst = -1;
 
-    // add yday and DST calculation if needed
-    // use the complete set also yday and dst to keep in mind the parameters
+    // REMARK: add DST calculation if needed, but therfore timezone info is needed!
+    // use the complete set also yearday and dst for having a complete struct tm
     return DateTime{year, month, day, hour, min, sec, wday, yday, dst};
 }
 
+ /**
+  * @brief Get the second of the DS3231 module
+  * 
+  * @return byte 0...59
+  */
 byte DS3231::getSecond() {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x00);
@@ -194,6 +198,11 @@ byte DS3231::getSecond() {
     return getRegisterValue();
 }
 
+/**
+ * @brief Get the minute of the DS3231 module
+ * 
+ * @return byte 0...59
+ */
 byte DS3231::getMinute() {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x01);
@@ -201,6 +210,13 @@ byte DS3231::getMinute() {
     return getRegisterValue();
 }
 
+/**
+ * @brief Get the hour of the DS3231 module
+ * 
+ * @param h12 
+ * @param PM_time 
+ * @return byte 1...12 / 0...23
+ */
 byte DS3231::getHour(bool& h12, bool& PM_time) {
     byte temp_buffer;
     byte hour;
@@ -221,6 +237,11 @@ byte DS3231::getHour(bool& h12, bool& PM_time) {
     return hour;
 }
 
+/**
+ * @brief Get the DayOfWeek of the DS3231 module
+ * 
+ * @return byte 1...7
+ */
 byte DS3231::getDoW() {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x03);
@@ -228,6 +249,11 @@ byte DS3231::getDoW() {
     return getRegisterValue();
 }
 
+/**
+ * @brief Get the date of the DS3231 module
+ * 
+ * @return byte 1...31
+ */
 byte DS3231::getDate() {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x04);
@@ -235,7 +261,13 @@ byte DS3231::getDate() {
     return getRegisterValue();
 }
 
-byte DS3231::getMonth(bool& Century) {
+/**
+ * @brief Get the month and the century roll over bit of the DS3231 module
+ * 
+ * @param century reference of century bit; toggles when value changes from 99 -> 00
+ * @return byte 
+ */
+byte DS3231::getMonth(bool &century) {
     byte temp_buffer;
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x05);
@@ -243,10 +275,15 @@ byte DS3231::getMonth(bool& Century) {
 
     _Wire.requestFrom(CLOCK_ADDRESS, 1);
     temp_buffer = _Wire.read();
-    Century = temp_buffer & 0b10000000;
+    century = temp_buffer & 0b10000000;
     return (bcdToDec(temp_buffer & 0b01111111));
 }
 
+/**
+ * @brief Get the Year of the DS3231 module
+ * 
+ * @return byte 0...99
+ */
 byte DS3231::getYear() {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x06);
@@ -254,9 +291,14 @@ byte DS3231::getYear() {
     return getRegisterValue();
 }
 
-// setEpoch function gives the epoch as parameter and feeds the RTC
-// epoch = UnixTime and starts at 01.01.1970 00:00:00
-// HINT: => the AVR time.h Lib is based on the year 2000
+/**
+ * @brief Set the DS3231 module by a given epoch as unix-epoch
+ *  epoch = UnixTime and starts at 01.01.1970 00:00:00
+ *  HINT: => the AVR time.h lib is based on the year 2000
+ * 
+ * @param epoch time_t timestamp of unix epoch
+ * @param flag_localtime flag if timestamp is based on local time
+ */
 void DS3231::setEpoch(time_t epoch, bool flag_localtime) {
 #if defined (__AVR__)
     epoch -= UNIX_OFFSET;
@@ -277,33 +319,41 @@ void DS3231::setEpoch(time_t epoch, bool flag_localtime) {
     setYear(tmnow.tm_year - 100U);
 }
 
-void DS3231::setSecond(byte Second) {
-    // Sets the seconds
-    // This function also resets the Oscillator Stop Flag, which is set
-    // whenever power is interrupted.
+/**
+ * @brief Set the second of the DS3231 module
+ * This function also resets the Oscillator Stop Flag, which is set
+ * whenever power is interrupted.
+ * @param second 0...59
+ */
+void DS3231::setSecond(byte second) { 
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x00);
-    _Wire.write(decToBcd(Second));
+    _Wire.write(decToBcd(second));
     _Wire.endTransmission();
     // Clear OSF flag
     byte temp_buffer = readControlByte(1);
     writeControlByte((temp_buffer & 0b01111111), 1);
 }
 
-void DS3231::setMinute(byte Minute) {
-    // Sets the minutes
+/**
+ * @brief Set the Minute of the DS3231 module
+ * 
+ * @param minute 0...59
+ */
+void DS3231::setMinute(byte minute) {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x01);
-    _Wire.write(decToBcd(Minute));
+    _Wire.write(decToBcd(minute));
     _Wire.endTransmission();
 }
 
-// Following setHour revision by David Merrifield 4/14/2020 correcting handling of 12-hour clock
-
-void DS3231::setHour(byte Hour) {
-    // Sets the hour, without changing 12/24h mode.
-    // The hour must be in 24h format.
-
+/**
+ * @brief Sets the hour, without changing 12/24h mode.
+ * The hour must be in 24h format.
+ * 
+ * @param hour 0...23
+ */
+void DS3231::setHour(byte hour) {
     bool h12;
     byte temp_hour;
 
@@ -317,8 +367,8 @@ void DS3231::setHour(byte Hour) {
 
     if (h12) {
         // 12 hour
-        bool am_pm = (Hour > 11);
-        temp_hour = Hour;
+        bool am_pm = (hour > 11);
+        temp_hour = hour;
         if (temp_hour > 11) {
             temp_hour = temp_hour - 12;
         }
@@ -328,7 +378,7 @@ void DS3231::setHour(byte Hour) {
         temp_hour = decToBcd(temp_hour) | (am_pm << 5) | 0b01000000;
     } else {
         // 24 hour
-        temp_hour = decToBcd(Hour) & 0b10111111;
+        temp_hour = decToBcd(hour) & 0b10111111;
     }
 
     _Wire.beginTransmission(CLOCK_ADDRESS);
@@ -337,42 +387,63 @@ void DS3231::setHour(byte Hour) {
     _Wire.endTransmission();
 }
 
-void DS3231::setDoW(byte DoW) {
-    // Sets the Day of Week
+/**
+ * @brief Sets the Day of Week of the DS3231 module
+ * 
+ * @param dayOfWeek 1...7
+ */
+void DS3231::setDoW(byte dayOfWeek) {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x03);
-    _Wire.write(decToBcd(DoW));
+    _Wire.write(decToBcd(dayOfWeek));
     _Wire.endTransmission();
 }
 
-void DS3231::setDate(byte Date) {
-    // Sets the Date
+/**
+ * @brief Sets the Date of the DS3231 module
+ * 
+ * @param date 1...31
+ */
+void DS3231::setDate(byte date) {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x04);
-    _Wire.write(decToBcd(Date));
+    _Wire.write(decToBcd(date));
     _Wire.endTransmission();
 }
 
-void DS3231::setMonth(byte Month) {
-    // Sets the month
+/**
+ * @brief Sets the Month of the DS3231 module
+ * 
+ * @param month 1...12
+ */
+void DS3231::setMonth(byte month) {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x05);
-    _Wire.write(decToBcd(Month));
+    _Wire.write(decToBcd(month));
     _Wire.endTransmission();
 }
 
-void DS3231::setYear(byte Year) {
-    // Sets the year
+/**
+ * @brief Sets the Year of the DS3231 module.
+ * 
+ * @param year 0...99 
+ */
+void DS3231::setYear(byte year) {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x06);
-    _Wire.write(decToBcd(Year));
+    _Wire.write(decToBcd(year));
     _Wire.endTransmission();
 }
 
+/**
+ * @brief sets the clock mode to .
+   
+ * 
+ * @param h12 12h (true) or 24h (false)
+ */
 void DS3231::setClockMode(bool h12) {
-    // sets the mode to 12-hour (true) or 24-hour (false).
     // One thing that bothers me about how I've written this is that
-    // if the read and right happen at the right hourly millisecnd,
+    // if the read and right happen at the right hourly millisecond,
     // the clock will be set back an hour. Not sure how to do it better,
     // though, and as long as one doesn't set the mode frequently it's
     // a very minimal risk.
@@ -402,13 +473,12 @@ void DS3231::setClockMode(bool h12) {
     _Wire.endTransmission();
 }
 
+/**
+ * @brief read the internal temperature sensor of the DS3231 module
+ * 
+ * @return float temperature measured in DS3231 module
+ */
 float DS3231::getTemperature() {
-    // Checks the internal thermometer on the DS3231 and returns the
-    // temperature as a floating-point value.
-
-    // Updated / modified a tiny bit from "Coding Badly" and "Tri-Again"
-    // http://forum.arduino.cc/index.php/topic,22301.0.html
-
     byte tMSB, tLSB;
     float temp3231;
 
@@ -420,14 +490,19 @@ float DS3231::getTemperature() {
 
     // Should I do more "if available" checks here?
     if(_Wire.available()) {
-    tMSB = _Wire.read(); //2's complement int portion
-    tLSB = _Wire.read(); //fraction portion
+        //2's complement int portion
+        tMSB = _Wire.read();
+        //fraction portion
+        tLSB = _Wire.read(); 
 
-    int16_t  itemp  = ( tMSB << 8 | (tLSB & 0xC0) );  // Shift upper byte, add lower
-    temp3231 = ( (float)itemp / 256.0 );              // Scale and return
+        // Shift upper byte, add lower
+        int16_t  itemp  = ( tMSB << 8 | (tLSB & 0xC0) );
+        // Scale and return
+        temp3231 = ( (float)itemp / 256.0 );
     }
     else {
-    temp3231 = -9999; // Impossible temperature; error value
+        // Impossible temperature; error value
+        temp3231 = -9999; 
     }
 
     return temp3231;

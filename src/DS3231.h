@@ -11,13 +11,9 @@
  *
  */
 
-// Modified by Andy Wickert 5/15/11: Spliced in stuff from RTClib
-// Modified by Simon Gassner 11/28/2017: Changed Term "PM" to "PM_time" for compability with SAMD Processors
 #ifndef __DS3231_H__
 #define __DS3231_H__
 
-// Changed the following to work on 1.0
-//#include "WProgram.h"
 #include <Arduino.h>
 #include <time.h>
 #include <Wire.h>
@@ -105,20 +101,25 @@ class DS3231 {
         // ************************************
         //      Time-retrieval functions
         // ************************************
+        // Get the second of the DS3231 module
         byte getSecond();
+        // Get the minute of the DS3231 module
         byte getMinute();
 
-        // In addition to returning the hour register, this function
+        // Get the hour of the DS3231 module, in addition, this function
         // returns the values of the 12/24-hour flag and the AM/PM flag.
         byte getHour(bool& h12, bool& PM_time);
-            
+
+        // Get the DayOfWeek of the DS3231 module   
         byte getDoW();
+
+        // Get the date of the DS3231 module
         byte getDate();
 
-        // Also sets the flag indicating century roll-over.
-        byte getMonth(bool& Century);
+        // Get the month and the century roll over of the DS3231 module
+        byte getMonth(bool &century);
             
-        // Last 2 digits only e.g. 2023 => 23
+        // Get the year of the DS3231 module
         byte getYear();
             
 
@@ -132,24 +133,28 @@ class DS3231 {
         // epoch = UnixTime and starts at 01.01.1970 00:00:00
         void setEpoch(time_t epoch = 0, bool flag_localtime = false);
 
-        // In addition to setting the seconds, this clears the
-        // "Oscillator Stop Flag".
-        void setSecond(byte Second);
-        void setMinute(byte Minute);
-        void setHour(byte Hour);
-        // Sets the Day of the Week (1...7);
-        void setDoW(byte DoW);
-        void setDate(byte Date);
-        void setMonth(byte Month);
-        // Last two digits of the year e.g. 23
-        void setYear(byte Year);
-        // Set 12/24h mode. True is 12-h, false is 24-hour.
+        // Set the Second of the DS3231 module
+        void setSecond(byte second);
+        // Set the minute of the DS3231 module
+        void setMinute(byte minute);
+        // Set the hour of the DS3231 module
+        void setHour(byte hour);
+        // Sets the Day of the Week (1...7) of the DS3231 module
+        void setDoW(byte dayOfWeek);
+        // Sets the Date of the DS3231 module
+        void setDate(byte date);
+         // Sets the Month of the DS3231 module
+        void setMonth(byte month);
+         // Sets the Year of the DS3231 module
+        void setYear(byte year);
+         // Sets the Hour format (12h/24h) of the DS3231 module
         void setClockMode(bool h12);
             
 
         // ************************************
         //        Temperature function
         // ************************************
+        // get temperature of the DS3231 module
         float getTemperature();
 
         // Alarm functions
