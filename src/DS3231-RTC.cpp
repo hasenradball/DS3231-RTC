@@ -2,7 +2,7 @@
     DS3231.cpp: DS3231 Real-Time Clock library
 */
 
-#include "DS3231_RTC.h"
+#include "DS3231-RTC.h"
 
 // These included for the DateTime class inclusion; will try to find a way to
 // not need them in the future...

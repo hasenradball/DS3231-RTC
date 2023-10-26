@@ -11,7 +11,7 @@ Tested on:
 */
 
 #include <Wire.h>
-#include <DS3231_RTC.h>
+#include <DS3231-RTC.h>
 
 // Setup clock
 DS3231 myRTC;

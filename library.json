@@ -7,7 +7,7 @@
         "url": "https://github.com/hasenradball/DS3231-RTC"
     },
     "description": "C++ Library for the DS3231 real-time clock (RTC) module, ready to use on Arduino IDE and PlatformIO.",
-    "keywords": ["DS3231", "DS3231_RTC", "real-time clock", "RTC", "Maxim", "Analog Devices"],
+    "keywords": ["DS3231", "DS3231-RTC", "DS3231_RTC", "real-time clock", "RTC", "Maxim", "Analog Devices"],
     "authors":
     {
         "name": "Frank Häfele",

@@ -56,7 +56,7 @@ The ease of using such a simple timer could support a very nice pathway into lea
  *
  */
 
-#import <DS3231_RTC.h>
+#import <DS3231-RTC.h>
 DS3231 myRTC; // Set up access to the DS3231
 
 #define PIN32K 3 // the pin to receive signal from DS3231
@@ -279,7 +279,7 @@ Dividing by other values can be approached similarly. The program writer would n
 Comments in the example provide additional documentaiton.
 
 ```
-#include <DS3231_RTC.h>
+#include <DS3231-RTC.h>
 DS3231 myRTC;
 
 

@@ -1,4 +1,4 @@
-# Syntax Coloring Map For DS3231_RTC Library
+# Syntax Coloring Map For DS3231-RTC Library
 
 # Datatypes (KEYWORD1)
 DS3231          KEYWORD1

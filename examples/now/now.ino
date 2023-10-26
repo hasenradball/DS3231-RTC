@@ -4,7 +4,7 @@
 // 5/15/11
 
 #include <Wire.h>
-#include <DS3231_RTC.h>
+#include <DS3231-RTC.h>
 
 RTClib myRTC;
 
