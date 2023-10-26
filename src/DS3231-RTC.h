@@ -5,8 +5,8 @@
  *
  */
 
-#ifndef __DS3231-RTC_H__
-#define __DS3231-RTC_H__
+#ifndef __DS3231_RTC_H__
+#define __DS3231_RTC_H__
 
 #include <Arduino.h>
 #include <time.h>
