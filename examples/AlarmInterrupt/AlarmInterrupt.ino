@@ -27,7 +27,7 @@ Added to this example:
 David Sparks, September 2022
 */
 
-#include <DS3231.h>
+#include <DS3231_RTC.h>
 #include <Wire.h>
 
 // myRTC interrupt pin

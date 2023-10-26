@@ -10,7 +10,7 @@ working as they should.
 
 */
 
-#include <DS3231.h>
+#include <DS3231_RTC.h>
 #include <Wire.h>
 
 DS3231 myRTC;

@@ -21,8 +21,8 @@ Tested on:
 
 */
 
-#include <DS3231.h>
 #include <Wire.h>
+#include <DS3231_RTC.h>
 
 // Interrupt frequency, in seconds
 #define INT_FREQ 3UL // 3 seconds, characterized as unsigned long

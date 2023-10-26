@@ -1,18 +1,12 @@
 /*
- * DS3231.h
+ * DS3231_RTC.h
  *
- * Arduino Library for the DS3231 Real-Time Clock chip
- *
- * (c) Eric Ayars
- * 4/1/11
- * released into the public domain. If you use this, please let me know
- * (just out of pure curiosity!) by sending me an email:
- * eric@ayars.org
+ * The great C++ Library for the DS3231 Real-Time Clock chip
  *
  */
 
-#ifndef __DS3231_H__
-#define __DS3231_H__
+#ifndef __DS3231_RTC_H__
+#define __DS3231_RTC_H__
 
 #include <Arduino.h>
 #include <time.h>

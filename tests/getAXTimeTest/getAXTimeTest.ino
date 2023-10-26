@@ -15,9 +15,8 @@ Tested on:
 - Arduino nano
 
 */
-
-#include <DS3231.h>
 #include <Wire.h>
+#include <DS3231_RTC.h>
 
 // Setup clock
 DS3231 myRTC;

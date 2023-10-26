@@ -45,7 +45,7 @@ After installing the Library in your Arduino IDE, using it in a program starts w
 
 
 ```
-#include <DS3231.h>
+#include <DS3231_RTC.h>
 ```
 
 <ol start="2">
@@ -201,8 +201,8 @@ void loop() {}
 ## Functions
 Readers are encouraged to visit the [Documentation folder](https://github.com/hasenradball/DS3231_RTC/tree/master/Documentation) for detailed information about the functions in this Library. Additional information is available in the [Examples of Use](#examples-of-use) described below, and in the code source files of this repository:
 
-* [DS3231.h](https://github.com/hasenradball/DS3231_RTC/blob/master/DS3231.h)
-* [DS3231.cpp](https://github.com/hasenradball/DS3231_RTC/blob/master/DS3231.cpp)
+* [DS3231_RTC.h](https://github.com/hasenradball/DS3231_RTC/blob/master/src/DS3231_RTC.h)
+* [DS3231_RTC.cpp](https://github.com/hasenradball/DS3231_RTC/blob/master/src/DS3231_RTC.cpp)
 
 ### [Read the Date or Time](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Time-Retrieval.md)
 - [RTClib::now() <sup>\*</sup>](https://github.com/hasenradball/DS3231_RTC#the-special-rtclibnow-function-)
@@ -261,7 +261,7 @@ The functions in this group support uses for a DS3231 other than as an alarm clo
 - [oscillatorCheck()](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/Utilities.md#oscillatorcheck)
 
 ### [DateTime Object](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/DateTime.md)
-A DateTime class is defined in this DS3231.h library. The link, above, provides more information about the class. 
+A DateTime class is defined in this DS3231_RTC.h library. The link, above, provides more information about the class. 
 
 [Retrieving Date and Time Data](https://github.com/hasenradball/DS3231_RTC/blob/master/Documentation/DateTime.md#retrieving-date-and-time-data)<br>
 further lists the DateTime class methods (for Documentation look into the src file): 

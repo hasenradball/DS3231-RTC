@@ -7,8 +7,8 @@ Test of set-time routines for a DS3231 RTC
 
 */
 
-#include <DS3231.h>
 #include <Wire.h>
+#include <DS3231_RTC.h>
 
 DS3231 myRTC;
 

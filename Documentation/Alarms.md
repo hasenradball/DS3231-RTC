@@ -46,7 +46,7 @@ This includes a set of variables that are required in the parameter lists by som
 All of the code examples in this article will use the variables by these names in parameter lists, including those of functions that could otherwise use numeric constants.
 
 ```
-#include <DS3231.h>  // import this Library
+#include <DS3231_RTC.h>  // import this Library
 DS3231 myRTC;        // declare an object for access to the alarm methods
 
 // declare variables to use with the alarm methods
