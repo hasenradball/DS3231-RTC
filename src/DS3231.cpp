@@ -12,6 +12,11 @@
 #include <pgmspace.h>
 #endif
 
+// *****************************************
+//  Static Functions only used in this file 
+// *****************************************
+
+static const uint8_t daysInMonth[] PROGMEM = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 /**
  * @brief function which calculates if a year is a leap year
@@ -20,7 +25,7 @@
  * @return true 
  * @return false 
  */
-bool isleapYear(const int16_t year) {
+static bool isleapYear(const int16_t year) {
     // check if divisible by 4
     if(year % 4) {
         return false;
@@ -37,7 +42,7 @@ bool isleapYear(const int16_t year) {
  * @param day 1...31
  * @return int16_t 
  */
-int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t day) {
+static int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t day) {
     uint16_t days = day - 1;
     for (uint8_t i = 1; i < month; ++i)
         days += pgm_read_byte(daysInMonth + i - 1);
@@ -46,22 +51,19 @@ int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t day) {
     return days;
 }
 
-/**
- * @brief Construct a new DS3231::DS3231 object
- * initialize the internal _Wire with the Wire object
- */
-DS3231::DS3231() : _Wire(Wire) {
-	// nothing to do for this constructor.
+// Slightly modified from JeeLabs / Ladyada
+// Get all date/time at once to avoid rollover (e.g., minute/second don't match)
+// Commented to avoid compiler warnings, but keeping in case we want this
+// eventually
+// static uint8_t bin2bcd (uint8_t val) { return val + 6 * (val / 10); }
+static uint8_t bcd2bin (uint8_t val) {
+	return val - 6 * (val >> 4);
 }
 
-/**
- * @brief Construct a new DS3231::DS3231 object
- * 
- * @param w reference of twoWire
- */
-DS3231::DS3231(TwoWire &twowire) : _Wire(twowire) {
-}
 
+// *****************************************
+//   Member functions for DateTime object
+// *****************************************
 /**
  * @brief Construct a new Date Time:: Date Time object
  * 
@@ -153,14 +155,9 @@ size_t DateTime::show_DateTime(char *buffer, size_t buffersize, const char *form
    return len;
 }
 
-// Slightly modified from JeeLabs / Ladyada
-// Get all date/time at once to avoid rollover (e.g., minute/second don't match)
-// Commented to avoid compiler warnings, but keeping in case we want this
-// eventually
-// static uint8_t bin2bcd (uint8_t val) { return val + 6 * (val / 10); }
-static uint8_t bcd2bin (uint8_t val) {
-	return val - 6 * (val >> 4);
-}
+// *****************************************
+//   Member functions for RTClib object
+// *****************************************
 
 DateTime RTClib::now(TwoWire & _Wire) {
     // This is the first register address (Seconds)
@@ -186,11 +183,32 @@ DateTime RTClib::now(TwoWire & _Wire) {
     return DateTime{year, month, day, hour, min, sec, wday, yday, dst};
 }
 
- /**
-  * @brief Get the second of the DS3231 module
-  * 
-  * @return byte 0...59
-  */
+
+// *****************************************
+//   Member functions for DS3231 object
+// *****************************************
+
+/**
+ * @brief Construct a new DS3231::DS3231 object
+ * initialize the internal _Wire with the Wire object
+ */
+DS3231::DS3231() : _Wire(Wire) {
+	// nothing to do for this constructor.
+}
+
+/**
+ * @brief Construct a new DS3231::DS3231 object
+ * 
+ * @param w reference of twoWire
+ */
+DS3231::DS3231(TwoWire &twowire) : _Wire(twowire) {
+}
+
+/**
+* @brief Get the second of the DS3231 module
+* 
+* @return byte 0...59
+*/
 byte DS3231::getSecond() {
     _Wire.beginTransmission(CLOCK_ADDRESS);
     _Wire.write(0x00);
@@ -236,6 +254,7 @@ byte DS3231::getHour(bool& h12, bool& PM_time) {
     }
     return hour;
 }
+
 
 /**
  * @brief Get the DayOfWeek of the DS3231 module
@@ -830,9 +849,9 @@ bool DS3231::oscillatorCheck() {
     return result;
 }
 
-/*****************************************
-	Private Functions
- *****************************************/
+// *****************************************
+// 	 Private Functions of DS3231 object
+// *****************************************
 
 byte DS3231::decToBcd(byte val) {
 // Convert normal decimal numbers to binary coded decimal

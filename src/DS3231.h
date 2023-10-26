@@ -34,15 +34,6 @@
 #define NTP_OFFSET 3155673600UL
 #endif
 
-// Utilities from JeeLabs/Ladyada
-// utility code, some of this could be exposed in the DateTime API if needed
-// DS3231 is smart enough to know this, but keeping it for now so I don't have
-// to rewrite their code. -ADW
-static const uint8_t daysInMonth[] PROGMEM = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-bool isleapYear(const uint16_t year);
-int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t day);
-
 // DateTime class restructured by using standardized time functions
 class DateTime {
     public:
