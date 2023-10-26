@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <DS3231_RTC.h>
+#include <DS3231-RTC.h>
 
 void showTimeFormated(time_t t) {
 #if defined (__AVR__)

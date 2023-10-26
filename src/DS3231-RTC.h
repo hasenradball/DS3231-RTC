@@ -1,12 +1,12 @@
 /*
- * DS3231_RTC.h
+ * DS3231-RTC.h
  *
  * The great C++ Library for the DS3231 Real-Time Clock chip
  *
  */
 
-#ifndef __DS3231_RTC_H__
-#define __DS3231_RTC_H__
+#ifndef __DS3231-RTC_H__
+#define __DS3231-RTC_H__
 
 #include <Arduino.h>
 #include <time.h>

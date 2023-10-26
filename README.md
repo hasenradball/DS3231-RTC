@@ -1,4 +1,4 @@
-# DS3231_RTC Library
+# DS3231-RTC Library
 The **great** C++ Library for the DS3231 real-time clock (RTC) module.  
 
 ## Description
@@ -45,7 +45,7 @@ After installing the Library in your Arduino IDE, using it in a program starts w
 
 
 ```
-#include <DS3231_RTC.h>
+#include <DS3231-RTC.h>
 ```
 
 <ol start="2">
@@ -152,7 +152,7 @@ For the use with a battery e.g.: `CR2032`, please desolder the **200 Ohm resisto
 See the corresponding link for the problem description in detail:<br>
 [DS3231-battery-problem](https://320volt.com/en/ds3231-cr2032-battery-problem-and-solution/)
 
-[back to top](#ds3231_rtc-library)
+[back to top](#ds3231-rtc-library)
 <hr>
 
 
@@ -195,14 +195,14 @@ void setup() {}
 void loop() {}
 ```
 
-[back to top](#ds3231_rtc-library)
+[back to top](#ds3231-rtc-library)
 <hr>
 
 ## Functions
 Readers are encouraged to visit the [Documentation folder](https://github.com/hasenradball/DS3231-RTC/tree/master/Documentation) for detailed information about the functions in this Library. Additional information is available in the [Examples of Use](#examples-of-use) described below, and in the code source files of this repository:
 
-* [DS3231_RTC.h](https://github.com/hasenradball/DS3231-RTC/blob/master/src/DS3231_RTC.h)
-* [DS3231_RTC.cpp](https://github.com/hasenradball/DS3231-RTC/blob/master/src/DS3231_RTC.cpp)
+* [DS3231-RTC.h](https://github.com/hasenradball/DS3231-RTC/blob/master/src/DS3231-RTC.h)
+* [DS3231-RTC.cpp](https://github.com/hasenradball/DS3231-RTC/blob/master/src/DS3231-RTC.cpp)
 
 ### [Read the Date or Time](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Time-Retrieval.md)
 - [RTClib::now() <sup>\*</sup>](https://github.com/hasenradball/DS3231-RTC#the-special-rtclibnow-function-)
@@ -261,7 +261,7 @@ The functions in this group support uses for a DS3231 other than as an alarm clo
 - [oscillatorCheck()](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/Utilities.md#oscillatorcheck)
 
 ### [DateTime Object](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/DateTime.md)
-A DateTime class is defined in this DS3231_RTC.h library. The link, above, provides more information about the class. 
+A DateTime class is defined in this DS3231-RTC.h library. The link, above, provides more information about the class. 
 
 [Retrieving Date and Time Data](https://github.com/hasenradball/DS3231-RTC/blob/master/Documentation/DateTime.md#retrieving-date-and-time-data)<br>
 further lists the DateTime class methods (for Documentation look into the src file): 
@@ -292,7 +292,7 @@ The value of `currentMoment` can then be accessed as either:
 see [Definiton of struct tm](https://en.cppreference.com/w/c/chrono/tm).
 
 [back to the list of functions](#functions)<br>
-[back to top](#ds3231_rtc-library)
+[back to top](#ds3231-rtc-library)
 <hr>
 
 ## Examples of Use
@@ -310,14 +310,14 @@ Future development plans include updating these examples and adding more of them
 
 See also [Working with the DS3231 libraries and interrupts](https://github.com/IowaDave/RTC-DS3231-Arduino-Interrupt), a tutorial provided by [IowaDave](https://github.com/IowaDave).
 
-[back to top](#ds3231_rtc-library)
+[back to top](#ds3231-rtc-library)
 <hr>
 
 ## Additional Resources and References
 
 * [Maxim DS3231 Data Sheet](https://datasheets.maximintegrated.com/en/ds/DS3231-DS3231S.pdf)
 
-[back to top](#ds3231_rtc-library)
+[back to top](#ds3231-rtc-library)
 <hr>
 
 ## Contributing
@@ -332,7 +332,7 @@ If you want to contribute to this project:
 
 Please read [CONTRIBUTING.md](https://github.com/hasenradball/DS3231-RTC/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-[back to top](#ds3231_rtc-library)
+[back to top](#ds3231-rtc-library)
 <hr>
 
 ## Credits
@@ -344,14 +344,14 @@ Based on previous work by:
 
 - A. Wickert
 
-[back to top](#ds3231_rtc-library)
+[back to top](#ds3231-rtc-library)
 <hr>
 
 ## License
 
 DS3231 is licensed under [MIT License](https://github.com/hasenradball/DS3231-RTC/blob/master/LICENSE).
 
-[back to top](#ds3231_rtc-library)
+[back to top](#ds3231-rtc-library)
 <hr>
 
 ## To Do
