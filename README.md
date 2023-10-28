@@ -273,6 +273,7 @@ further lists the DateTime class methods (for Documentation look into the src fi
 - getMinute()
 - getSecond()
 - getWeekDay()
+- getYearDay()
 - getDST()
 - show_DateTime()
 - getUnixTime()
