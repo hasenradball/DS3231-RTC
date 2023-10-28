@@ -1,0 +1,327 @@
+Start testing: May 14 00:42 CEST
+----------------------------------------------------------
+1/12 Testing: DS3231Tools.BinaryDecodedDecimalToDecimal_22
+1/12 Test: DS3231Tools.BinaryDecodedDecimalToDecimal_22
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231Tools.BinaryDecodedDecimalToDecimal_22" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231Tools.BinaryDecodedDecimalToDecimal_22" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231Tools.BinaryDecodedDecimalToDecimal_22
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231Tools
+[ RUN      ] DS3231Tools.BinaryDecodedDecimalToDecimal_22
+[       OK ] DS3231Tools.BinaryDecodedDecimalToDecimal_22 (0 ms)
+[----------] 1 test from DS3231Tools (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231Tools.BinaryDecodedDecimalToDecimal_22" end time: May 14 00:42 CEST
+"DS3231Tools.BinaryDecodedDecimalToDecimal_22" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/12 Testing: DS3231Tools.BinaryDecodedDecimalToDecimal_59
+2/12 Test: DS3231Tools.BinaryDecodedDecimalToDecimal_59
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231Tools.BinaryDecodedDecimalToDecimal_59" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231Tools.BinaryDecodedDecimalToDecimal_59" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231Tools.BinaryDecodedDecimalToDecimal_59
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231Tools
+[ RUN      ] DS3231Tools.BinaryDecodedDecimalToDecimal_59
+[       OK ] DS3231Tools.BinaryDecodedDecimalToDecimal_59 (0 ms)
+[----------] 1 test from DS3231Tools (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231Tools.BinaryDecodedDecimalToDecimal_59" end time: May 14 00:42 CEST
+"DS3231Tools.BinaryDecodedDecimalToDecimal_59" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/12 Testing: DS3231Tools.DecimalToBinaryDecodedDecimal_22
+3/12 Test: DS3231Tools.DecimalToBinaryDecodedDecimal_22
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231Tools.DecimalToBinaryDecodedDecimal_22" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231Tools.DecimalToBinaryDecodedDecimal_22" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231Tools.DecimalToBinaryDecodedDecimal_22
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231Tools
+[ RUN      ] DS3231Tools.DecimalToBinaryDecodedDecimal_22
+[       OK ] DS3231Tools.DecimalToBinaryDecodedDecimal_22 (0 ms)
+[----------] 1 test from DS3231Tools (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231Tools.DecimalToBinaryDecodedDecimal_22" end time: May 14 00:42 CEST
+"DS3231Tools.DecimalToBinaryDecodedDecimal_22" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/12 Testing: DS3231Tools.DecimalToBinaryDecodedDecimal_59
+4/12 Test: DS3231Tools.DecimalToBinaryDecodedDecimal_59
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231Tools.DecimalToBinaryDecodedDecimal_59" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231Tools.DecimalToBinaryDecodedDecimal_59" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231Tools.DecimalToBinaryDecodedDecimal_59
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231Tools
+[ RUN      ] DS3231Tools.DecimalToBinaryDecodedDecimal_59
+[       OK ] DS3231Tools.DecimalToBinaryDecodedDecimal_59 (0 ms)
+[----------] 1 test from DS3231Tools (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231Tools.DecimalToBinaryDecodedDecimal_59" end time: May 14 00:42 CEST
+"DS3231Tools.DecimalToBinaryDecodedDecimal_59" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/12 Testing: DS3231MockTest.GetSecondReadsSecondRegister
+5/12 Test: DS3231MockTest.GetSecondReadsSecondRegister
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231MockTest.GetSecondReadsSecondRegister" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231MockTest.GetSecondReadsSecondRegister" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231MockTest.GetSecondReadsSecondRegister
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231MockTest
+[ RUN      ] DS3231MockTest.GetSecondReadsSecondRegister
+[       OK ] DS3231MockTest.GetSecondReadsSecondRegister (0 ms)
+[----------] 1 test from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231MockTest.GetSecondReadsSecondRegister" end time: May 14 00:42 CEST
+"DS3231MockTest.GetSecondReadsSecondRegister" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/12 Testing: DS3231MockTest.GetMinuteReadsMinuteRegister
+6/12 Test: DS3231MockTest.GetMinuteReadsMinuteRegister
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231MockTest.GetMinuteReadsMinuteRegister" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231MockTest.GetMinuteReadsMinuteRegister" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231MockTest.GetMinuteReadsMinuteRegister
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231MockTest
+[ RUN      ] DS3231MockTest.GetMinuteReadsMinuteRegister
+[       OK ] DS3231MockTest.GetMinuteReadsMinuteRegister (0 ms)
+[----------] 1 test from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231MockTest.GetMinuteReadsMinuteRegister" end time: May 14 00:42 CEST
+"DS3231MockTest.GetMinuteReadsMinuteRegister" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/12 Testing: DS3231MockTest.GetHourReadsFlagsAndBcdValue
+7/12 Test: DS3231MockTest.GetHourReadsFlagsAndBcdValue
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231MockTest.GetHourReadsFlagsAndBcdValue" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231MockTest.GetHourReadsFlagsAndBcdValue" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231MockTest.GetHourReadsFlagsAndBcdValue
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231MockTest
+[ RUN      ] DS3231MockTest.GetHourReadsFlagsAndBcdValue
+[       OK ] DS3231MockTest.GetHourReadsFlagsAndBcdValue (0 ms)
+[----------] 1 test from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231MockTest.GetHourReadsFlagsAndBcdValue" end time: May 14 00:42 CEST
+"DS3231MockTest.GetHourReadsFlagsAndBcdValue" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/12 Testing: DS3231MockTest.SetHourWritesUpdatedHourRegister
+8/12 Test: DS3231MockTest.SetHourWritesUpdatedHourRegister
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231MockTest.SetHourWritesUpdatedHourRegister" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231MockTest.SetHourWritesUpdatedHourRegister" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231MockTest.SetHourWritesUpdatedHourRegister
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231MockTest
+[ RUN      ] DS3231MockTest.SetHourWritesUpdatedHourRegister
+[       OK ] DS3231MockTest.SetHourWritesUpdatedHourRegister (0 ms)
+[----------] 1 test from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231MockTest.SetHourWritesUpdatedHourRegister" end time: May 14 00:42 CEST
+"DS3231MockTest.SetHourWritesUpdatedHourRegister" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/12 Testing: DS3231MockTest.GetDoWReadsDoWRegister
+9/12 Test: DS3231MockTest.GetDoWReadsDoWRegister
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231MockTest.GetDoWReadsDoWRegister" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231MockTest.GetDoWReadsDoWRegister" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231MockTest.GetDoWReadsDoWRegister
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231MockTest
+[ RUN      ] DS3231MockTest.GetDoWReadsDoWRegister
+[       OK ] DS3231MockTest.GetDoWReadsDoWRegister (0 ms)
+[----------] 1 test from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231MockTest.GetDoWReadsDoWRegister" end time: May 14 00:42 CEST
+"DS3231MockTest.GetDoWReadsDoWRegister" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/12 Testing: DS3231MockTest.GetDayReadsDateRegister
+10/12 Test: DS3231MockTest.GetDayReadsDateRegister
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231MockTest.GetDayReadsDateRegister" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231MockTest.GetDayReadsDateRegister" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231MockTest.GetDayReadsDateRegister
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231MockTest
+[ RUN      ] DS3231MockTest.GetDayReadsDateRegister
+[       OK ] DS3231MockTest.GetDayReadsDateRegister (0 ms)
+[----------] 1 test from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231MockTest.GetDayReadsDateRegister" end time: May 14 00:42 CEST
+"DS3231MockTest.GetDayReadsDateRegister" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/12 Testing: DS3231MockTest.GetMonthReadsMonthRegister
+11/12 Test: DS3231MockTest.GetMonthReadsMonthRegister
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231MockTest.GetMonthReadsMonthRegister" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231MockTest.GetMonthReadsMonthRegister" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231MockTest.GetMonthReadsMonthRegister
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231MockTest
+[ RUN      ] DS3231MockTest.GetMonthReadsMonthRegister
+[       OK ] DS3231MockTest.GetMonthReadsMonthRegister (0 ms)
+[----------] 1 test from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231MockTest.GetMonthReadsMonthRegister" end time: May 14 00:42 CEST
+"DS3231MockTest.GetMonthReadsMonthRegister" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/12 Testing: DS3231MockTest.GetYearReadsYearRegister
+12/12 Test: DS3231MockTest.GetYearReadsYearRegister
+Command: "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231" "--gtest_filter=DS3231MockTest.GetYearReadsYearRegister" "--gtest_also_run_disabled_tests"
+Directory: /Users/frank/Documents/git_repos/DS3231-RTC/build/test
+"DS3231MockTest.GetYearReadsYearRegister" start time: May 14 00:42 CEST
+Output:
+----------------------------------------------------------
+Running main() from /Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DS3231MockTest.GetYearReadsYearRegister
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DS3231MockTest
+[ RUN      ] DS3231MockTest.GetYearReadsYearRegister
+[       OK ] DS3231MockTest.GetYearReadsYearRegister (0 ms)
+[----------] 1 test from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"DS3231MockTest.GetYearReadsYearRegister" end time: May 14 00:42 CEST
+"DS3231MockTest.GetYearReadsYearRegister" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: May 14 00:42 CEST

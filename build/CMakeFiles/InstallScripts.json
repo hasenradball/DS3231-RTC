@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/frank/Documents/git_repos/DS3231-RTC/build/cmake_install.cmake",
+		"/Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-build/cmake_install.cmake",
+		"/Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-build/googlemock/cmake_install.cmake",
+		"/Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-build/googletest/cmake_install.cmake",
+		"/Users/frank/Documents/git_repos/DS3231-RTC/build/test/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

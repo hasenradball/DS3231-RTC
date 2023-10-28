@@ -1,0 +1,78 @@
+{
+  "tests": 12,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "DS3231Tools",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "BinaryDecodedDecimalToDecimal_22",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 9
+        },
+        {
+          "name": "BinaryDecodedDecimalToDecimal_59",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 13
+        },
+        {
+          "name": "DecimalToBinaryDecodedDecimal_22",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 17
+        },
+        {
+          "name": "DecimalToBinaryDecodedDecimal_59",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "name": "DS3231MockTest",
+      "tests": 8,
+      "testsuite": [
+        {
+          "name": "GetSecondReadsSecondRegister",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 41
+        },
+        {
+          "name": "GetMinuteReadsMinuteRegister",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 51
+        },
+        {
+          "name": "GetHourReadsFlagsAndBcdValue",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 61
+        },
+        {
+          "name": "SetHourWritesUpdatedHourRegister",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 76
+        },
+        {
+          "name": "GetDoWReadsDoWRegister",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 93
+        },
+        {
+          "name": "GetDayReadsDateRegister",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 103
+        },
+        {
+          "name": "GetMonthReadsMonthRegister",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 113
+        },
+        {
+          "name": "GetYearReadsYearRegister",
+          "file": "\/Users\/frank\/Documents\/git_repos\/DS3231-RTC\/test\/test_DS3231.cpp",
+          "line": 124
+        }
+      ]
+    }
+  ]
+}

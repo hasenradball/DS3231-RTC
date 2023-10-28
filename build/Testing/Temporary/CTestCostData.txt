@@ -1,0 +1,14 @@
+DS3231MockTest.GetMinuteReadsMinuteRegister 37 0.000152242
+DS3231MockTest.GetHourReadsFlagsAndBcdValue 37 0.000145439
+DS3231MockTest.SetHourWritesUpdatedHourRegister 37 0.00012649
+DS3231MockTest.GetSecondReadsSecondRegister 35 0.000101068
+DS3231MockTest.GetDoWReadsDoWRegister 34 0.000109467
+DS3231MockTest.GetDayReadsDateRegister 6 0.000671313
+DS3231MockTest.GetMonthReadsMonthRegister 28 0.000134451
+DS3231MockTest.GetYearReadsYearRegister 11 0.000352667
+DS3231Tools.BinaryDecodedDecimalToDecimal 2 0.106631
+DS3231Tools.BinaryDecodedDecimalToDecimal_22 7 0.000565173
+DS3231Tools.BinaryDecodedDecimalToDecimal_59 7 0.000678405
+DS3231Tools.DecimalToBinaryDecodedDecimal_22 7 0.000660911
+DS3231Tools.DecimalToBinaryDecodedDecimal_59 7 0.00924525
+---

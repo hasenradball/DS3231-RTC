@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
