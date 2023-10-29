@@ -142,15 +142,17 @@ void DateTime::set_timstamps() {
 }
 
 /**
- * @brief smart time print function based on the standard strftime function
- * see: https://en.cppreference.com/w/cpp/chrono/c/strftime
+ * @brief function to format a DateTime string in an buffer based on the standard strftime function
+ * 
+ *  see: https://cplusplus.com/reference/ctime/strftime/ 
+ *  or:  https://en.cppreference.com/w/cpp/chrono/c/strftime
  * 
  * @param buffer buffer for time string 
  * @param buffersize size of buffer
  * @param formatSpec define format see strftime
  * @return size_t lenth of used buffer
  */
-size_t DateTime::show_DateTime(char *buffer, size_t buffersize, const char *formatSpec) {
+size_t DateTime::strf_DateTime(char *buffer, size_t buffersize, const char *formatSpec) {
    size_t len {strftime(buffer, buffersize, formatSpec, &_tm)};
    return len;
 }
