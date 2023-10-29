@@ -48,7 +48,7 @@ class DateTime {
         int8_t getWeekDay() const	{ return _tm.tm_wday; }
         int16_t getYearDay() const	{ return _tm.tm_yday; }
         int16_t getDST()    const   { return _tm.tm_isdst; }
-        size_t show_DateTime(char *buffer, size_t buffersize, const char *formatSpec = "%a %h %d %T %Y");
+        size_t strf_DateTime(char *buffer, size_t buffersize, const char *formatSpec = "%a %h %d %T %Y");
 
         // time_t value as seconds since 1/1/2000
         time_t getY2kTime() const { return _y2k_timestamp; }

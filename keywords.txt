@@ -9,6 +9,7 @@ DateTime        KEYWORD1
 now             KEYWORD2
 getY2kTime      KEYWORD2
 getUnixTime     KEYWORD2
+strf_DateTime   KEYWORD2
 getWeekDay      KEYWORD2
 getDST          KEYWORD2
 getSecond       KEYWORD2

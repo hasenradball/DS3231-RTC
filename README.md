@@ -18,7 +18,7 @@ This library was based on the master branch of [NorthernWidget/DS3231](https://g
 * using standardized functions of the `time.h` library.
 * introduce a `struct tm` which holds all relevant date and time values.
 * restrucure comments, so that syntax highlighting works fine.
-* add a `show_DateTime()` function with can be used to print a user specific(self defined) DateTime string easily.
+* add a `strf_DateTime()` function with can be used to print a user specific(self defined) DateTime string easily.
 
 ## Contents
 
@@ -275,7 +275,7 @@ further lists the DateTime class methods (for Documentation look into the src fi
 - getWeekDay()
 - getYearDay()
 - getDST()
-- show_DateTime()
+- strf_DateTime()
 - getUnixTime()
 - getY2KTime()
 
