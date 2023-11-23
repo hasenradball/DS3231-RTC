@@ -350,7 +350,7 @@ Based on previous work by:
 
 ## License
 
-DS3231_RTC is licensed under [MIT License](https://github.com/hasenradball/DS3231-RTC/blob/master/LICENSE).
+DS3231-RTC is licensed under [MIT License](https://github.com/hasenradball/DS3231-RTC/blob/master/LICENSE).
 
 [back to top](#ds3231-rtc-library)
 <hr>
