@@ -276,7 +276,7 @@ An algorithm is developed to divide the 65,536 interrupts into ten, nearly-equal
 
 Dividing by other values can be approached similarly. The program writer would need to work out the applicable numbers of steps and interval lengths.
 
-Comments in the example provide additional documentaiton.
+Comments in the example provide additional documentation.
 
 ```
 #include <DS3231-RTC.h>

@@ -6,7 +6,7 @@ struct bits3231 {
   unsigned :1; // skip high bit 
   // 01h time minutes 00 - 59
   unsigned timeMin:4; // minutes digit 0 - 9
-  unsigned timeMin10:3; // tens of minuts digit 0 - 5
+  unsigned timeMin10:3; // tens of minutes digit 0 - 5
   unsigned: 1; // skip high bit
   // 02h time hour 1 - 12 or 0 - 23
   unsigned timeHour:4; // hours digit 0 - 9
@@ -35,7 +35,7 @@ struct bits3231 {
   unsigned A1M1:1; // Alarm 1 Bit 1
   // 08h Alarm 1 minutes 00 - 59
   unsigned A1Min:4; // minutes digit 0 - 9
-  unsigned A1Min10:3; // tens of minuts digit 0 - 5
+  unsigned A1Min10:3; // tens of minutes digit 0 - 5
   unsigned: A1M2; // Alarm 1 Bit 2
   // 09h Alarm 1 hour 1 - 12 or 0 - 23
   unsigned A1Hour:4; // hours digit 0 - 9
@@ -53,7 +53,7 @@ struct bits3231 {
   //
   // 0Bh Alarm 2 minutes 00 - 59
   unsigned A2Min:4; // minutes digit 0 - 9
-  unsigned A2Min10:3; // tens of minuts digit 0 - 5
+  unsigned A2Min10:3; // tens of minutes digit 0 - 5
   unsigned: A2M2; // Alarm 2 Bit 2
   // 0Ch Alarm 2 hour 1 - 12 or 0 - 23
   unsigned A2Hour:4; // hours digit 0 - 9
@@ -73,7 +73,7 @@ struct bits3231 {
   unsigned RS2:1; // set square wave frequency
   unsigned RS1:1; // set square wave frequency
   unsigned INTCN:1; // interrupt control, high enables interrupt output
-  unsigned A2IE:1; // enbable interrupt on A2 match
+  unsigned A2IE:1; // enable interrupt on A2 match
   unsigned A1IE:1; // enable interrupt on A1 match
   // 0Fh Device control / status register
   unsigned OSF:1; // oscillator stop flag
