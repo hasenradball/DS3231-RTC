@@ -436,7 +436,7 @@ bool checkIfAlarm(byte Alarm);
 
 NOTE TO PROGRAMMERS: this version of the method always overwrites the value of the alarm flag to zero. An alternate version, below, allows programs an option to preserve the value of the flag in the DS3231.
 
-It may be desirable to do so in programs that re-use a single alarm repeatedly.
+It may be desirable to do so in programs that reuse a single alarm repeatedly.
 
 The flag value is returned to the program, where it may be assigned to a program variable for later evaluation and use. 
 

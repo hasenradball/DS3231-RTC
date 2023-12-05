@@ -109,10 +109,10 @@ void setup () {
     showTimeFormated(tstmp);
 
     // Use smart print function from DateTime class
-    Serial.print("\nUse show_DateTime function:\n ");
+    Serial.print("\nUse strf_DateTime function:\n ");
     // provide a buffer
     char buffer[80];
-    datetime.show_DateTime(buffer, sizeof(buffer));
+    datetime.strf_DateTime(buffer, sizeof(buffer));
     Serial.println(buffer);
 }
 

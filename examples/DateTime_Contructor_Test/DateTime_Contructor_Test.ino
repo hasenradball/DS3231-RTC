@@ -89,7 +89,7 @@ void setup () {
     //auto tic{micros()};
     DateTime datetime = myRTC.now();
     //auto toc {micros()};
-    //Serial.print("\n\nDateTime Class instatiation duration: ");
+    //Serial.print("\n\nDateTime Class instantiation duration: ");
     //Serial.print(toc-tic);
     //Serial.println(" µs");
 
@@ -122,9 +122,9 @@ void setup () {
     Serial.print("\n\nPrint Data via function <showTimeFormated> of Struct tm:\n\t");
     showTimeFormated(tstmp);
 
-    Serial.print("\nPrint Data via DataTime function <show_DateTime>:\n\t");
+    Serial.print("\nPrint Data via DataTime function <strf_DateTime>:\n\t");
     char buffer[80];
-    datetime.show_DateTime(buffer, sizeof(buffer));
+    datetime.strf_DateTime(buffer, sizeof(buffer));
     Serial.println(buffer);
 
     //Serial.print("\nPrint __DATE__ and __TIME__:\n");

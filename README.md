@@ -1,4 +1,7 @@
 # DS3231-RTC Library
+![](https://github.com/hasenradball/DS3231-RTC/actions/workflows/spell_checker.yml/badge.svg)
+![](https://github.com/hasenradball/DS3231-RTC/actions/workflows/compile_examples.yml/badge.svg)
+
 The **great** C++ Library for the DS3231 real-time clock (RTC) module.  
 
 ## Description
@@ -17,8 +20,8 @@ You do have to install the Library in your Arduino IDE environment before you ca
 This library was based on the master branch of [NorthernWidget/DS3231](https://github.com/NorthernWidget/DS3231) Library in Oct/2023. It was reworked and refractured with respect of the following main topics:
 * using standardized functions of the `time.h` library.
 * introduce a `struct tm` which holds all relevant date and time values.
-* restrucure comments, so that syntax highlighting works fine.
-* add a `show_DateTime()` function with can be used to print a user specific(self defined) DateTime string easily.
+* restructure comments, so that syntax highlighting works fine.
+* add a `strf_DateTime()` function with can be used to print a user specific(self defined) DateTime string easily.
 
 ## Contents
 
@@ -83,7 +86,7 @@ The Library incorporates two other classes to assist with managing `date` and `t
 * `DateTime` class enables a object for managing date and time data.
 * `RTClib` class institutes a convenient `RTClib::now()` function for receiving a date/time snapshot, as a DateTime object, from the DS3231 device.
 
-The `DateTime` class can be instanciated by a specific date and time in three different ways:
+The `DateTime` class can be instantiated by a specific date and time in three different ways:
 
 * 1.) by distinct values for:<br>
 year, month, day, hour, minute and second
@@ -94,7 +97,7 @@ year, month, day, hour, minute and second
 
 * 3.) by giving a separate `const char *` string for Date and Time like:<br>
 `"Feb 16 2022"` and `"14:05:00"`<br>
-This can be also achived by usage on the precomoiler Tags `__DATE__` and `__TIME__`.
+This can be also achieved by usage on the precompiler Tags `__DATE__` and `__TIME__`.
 
 
 
@@ -275,7 +278,7 @@ further lists the DateTime class methods (for Documentation look into the src fi
 - getWeekDay()
 - getYearDay()
 - getDST()
-- show_DateTime()
+- strf_DateTime()
 - getUnixTime()
 - getY2KTime()
 
@@ -290,7 +293,7 @@ The function returns a DateTime object. To use it in your program, declare a Dat
 The value of `currentMoment` can then be accessed as either:
 * getting an unsigned integer containing the number of seconds since a certain reference date (Unix-Time or Y2K-Time)
 * distinct values out of the `struct tm` for Year, Month, Day, Date, Hour, Minute, Second etc...<br>
-see [Definiton of struct tm](https://en.cppreference.com/w/c/chrono/tm).
+see [Definition of struct tm](https://en.cppreference.com/w/c/chrono/tm).
 
 [back to the list of functions](#functions)<br>
 [back to top](#ds3231-rtc-library)
