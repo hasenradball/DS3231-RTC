@@ -150,7 +150,7 @@ void DateTime::set_timstamps() {
  * @param buffer buffer for time string 
  * @param buffersize size of buffer
  * @param formatSpec define format see strftime
- * @return size_t lenth of used buffer
+ * @return size_t length of used buffer
  */
 size_t DateTime::strf_DateTime(char *buffer, size_t buffersize, const char *formatSpec) {
    size_t len {strftime(buffer, buffersize, formatSpec, &_tm)};
@@ -180,7 +180,7 @@ DateTime RTClib::now(TwoWire & _Wire) {
     int16_t yday = calcYearDay(year, month, day);
     int16_t dst = -1;
 
-    // REMARK: add DST calculation if needed, but therfore timezone info is needed!
+    // REMARK: add DST calculation if needed, but therefore timezone info is needed!
     // use the complete set also yearday and dst for having a complete struct tm
     return DateTime{year, month, day, hour, min, sec, wday, yday, dst};
 }

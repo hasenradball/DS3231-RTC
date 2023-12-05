@@ -89,7 +89,7 @@ void setup () {
     //auto tic{micros()};
     DateTime datetime = myRTC.now();
     //auto toc {micros()};
-    //Serial.print("\n\nDateTime Class instatiation duration: ");
+    //Serial.print("\n\nDateTime Class instantiation duration: ");
     //Serial.print(toc-tic);
     //Serial.println(" µs");
 

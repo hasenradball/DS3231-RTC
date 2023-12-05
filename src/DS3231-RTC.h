@@ -167,7 +167,7 @@ class DS3231 {
         *	1	0		0		0		Alarm when DoW, hour, min match
         *
         *	Note: byte AlarmBits is not explicitly cleared for the getAXTime methods to
-        *	support sequential retreival of both alarms with the same byte AlarmBits.
+        *	support sequential retrieval of both alarms with the same byte AlarmBits.
         *	Use the flag bool clearAlarmBits=True to explicitly clear byte AlarmBits on
         *  call to getAXTime.
         */
