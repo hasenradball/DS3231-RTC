@@ -31,7 +31,7 @@ static bool isleapYear(const int16_t year) {
         return false;
     }
     // only check other, when first failed
-    return (year % 100 || year % 400 == 0);
+    return (year % 100 != 0 || year % 400 == 0);
 }
 
 /**
