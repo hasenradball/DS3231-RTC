@@ -3,36 +3,59 @@
  * @author  Frank Häfele
  * @date    31.03.2026
  * @version 1.2.0
- * @brief   Real-Time clock library based on Arduino Frameword
+ * @brief   Real-Time clock library based on Arduino Framework
  */
 
-#ifndef __DS3231_RTC_H__
-#define __DS3231_RTC_H__
+#pragma once
 
-//#include <Arduino.h>
+#if __has_include(<Arduino.h>)
+#include <Arduino.h>
+#else
+#include <cstddef>
+#include <cstdint>
+#endif
+
+#if __has_include(<Wire.h>)
+#include <Wire.h>
+#define DS3231_RTC_HAS_WIRE 1
+#else
+#define DS3231_RTC_HAS_WIRE 0
+#endif
+
 #include <time.h>
-//#include <Wire.h>
+#include "DS3231-RTC_Tools.h"
+#include "DS3231-RTC_Constants.h"
 
 namespace DS3231 {
+   class BusInterface {
+      public:
+         virtual ~BusInterface() = default;
+         virtual void beginTransmission(uint8_t address) = 0;
+         virtual size_t write(uint8_t value) = 0;
+         virtual uint8_t endTransmission() = 0;
+         virtual uint8_t requestFrom(uint8_t address, uint8_t quantity) = 0;
+         virtual int read() = 0;
+         virtual int available() = 0;
+   };
 
-   constexpr unsigned int CLOCK_ADDRESS {0x68};
+#if DS3231_RTC_HAS_WIRE
+   class TwoWireAdapter : public BusInterface {
+      public:
+         explicit TwoWireAdapter(TwoWire &wire);
 
-   /**
-    * @brief Seconds from 1/1/1970 to 1/1/2000.
-    * AKA Difference between the Y2K and the UNIX epochs, in seconds.
-    * To convert a Y2K timestamp to UNIX.
-    * 
-    */
-   constexpr unsigned long UNIX_OFFSET {946684800UL};
+         void beginTransmission(uint8_t address) override;
+         size_t write(uint8_t value) override;
+         uint8_t endTransmission() override;
+         uint8_t requestFrom(uint8_t address, uint8_t quantity) override;
+         int read() override;
+         int available() override;
 
-   /**
-    * @brief Seconds from 1/1/1990 to 1/1/2000.
-    * AKA Difference between the Y2K and the NTP epochs, in seconds.
-    * To convert a Y2K timestamp to NTP.
-    * 
-    */
-   constexpr unsigned long  NTP_OFFSET {3155673600UL};
+      private:
+         TwoWire &_wire;
+   };
+#endif
 
+#pragma region DateTime
    class DateTime {
       public:
          /**
@@ -191,20 +214,27 @@ namespace DS3231 {
          */
          struct tm _tm;
    };
+#pragma endregion DateTime
 
    class RTClib {
       public:
          /**
             * @brief get the actual timestamp snapshot
             * 
-            * @param _Wire 
+            * @param bus 
             * @return DateTime 
             */
+         static DateTime now(BusInterface &bus);
+
+#if DS3231_RTC_HAS_WIRE
          static DateTime now(TwoWire &_Wire = Wire);
+#endif
    };
 
+#pragma region DS3231
    class DS3231 {
       public:
+#if DS3231_RTC_HAS_WIRE
          /**
          * @brief Construct a new DS3231::DS3231 object
          * initialize the internal _Wire with the Wire object
@@ -217,6 +247,14 @@ namespace DS3231 {
          * @param twowire reference of TwoWire object
          */
          DS3231(TwoWire &twowire);
+#endif
+
+         /**
+         * @brief Construct a new DS3231::DS3231 object with an injected bus
+         * 
+         * @param bus abstract bus implementation for production or tests
+         */
+         explicit DS3231(BusInterface &bus);
 
          // ************************************
          //      Time-retrieval functions
@@ -254,7 +292,7 @@ namespace DS3231 {
          uint8_t getDoW();
 
          /**
-         * @brief Get the date of the DS3231 module
+         * @brief Get the date/day of the DS3231 module
          * 
          * @return uint8_t 1...31
          */
@@ -570,30 +608,71 @@ namespace DS3231 {
 
       private:
          /**
-         * @brief internal Twowire object reference
+         * @brief optional adapter used for Arduino TwoWire integration
          * 
          */
-         TwoWire &_Wire;
-         
-         // the getter functions retrieve current values of the registers.
+#if DS3231_RTC_HAS_WIRE
+         std::optional<TwoWireAdapter> _wire_adapter;
+#endif
+
+         /**
+         * @brief abstracted bus implementation used by this instance
+         * 
+         */
+         BusInterface *_bus;
+
+         BusInterface &bus() { return *_bus; }
+
+         /**
+          * @brief the getter functions retrieve current values of the registers.
+          * 
+          * @return uint8_t register value
+          */
          uint8_t getRegisterValue() {
-            _Wire.requestFrom(CLOCK_ADDRESS, 1);
-            return bcdToDec(_Wire.read());
+            bus().requestFrom(DS3231_Constants::DS3231_I2C_ADDRESS, 1);
+            return DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus().read()));
          }
 
-         // Convert normal decimal numbers to binary coded decimal
-         uint8_t decToBcd(uint8_t val);
-         // Convert binary coded decimal to normal decimal numbers
-         uint8_t bcdToDec(uint8_t val);
+         /**
+          * @brief write register address to bus from which to read from
+          *
+          * @param register_addr address of DS3231 register
+          */
+         void selectRegister(uint8_t register_addr);
+
+         /**
+          * @brief 
+          * 
+          * @param register_addr address of DS3231 register
+          * @return uint8_t 
+          */
+         uint8_t readRegisterRaw(uint8_t register_addr);
+
+         /**
+          * @brief write value into DS3231 register 
+          * 
+          * @param register_addr address of DS3231 register
+          * @param value value to write in register
+          */
+         void writeRegister(uint8_t register_addr, uint8_t value);
 
 
       protected:
-         // Read selected control uint8_t: (0); reads 0x0e, (1) reads 0x0f
+         /**
+          * @brief Read selected control byte. 
+          * 
+          * @param which (0) reads 0x0e, (1) reads 0x0f
+          * @return uint8_t control byte
+          */
          uint8_t readControlByte(bool which);
-         
-         // Write the selected control uint8_t.
-         // which == false -> 0x0e, true->0x0f.
+
+         /**
+          * @brief write control byte
+          * 
+          * @param control byte to write
+          * @param which (0) writes 0x0e, (1) writes 0x0f
+          */
          void writeControlByte(uint8_t control, bool which);
    };
+#pragma endregion DS3231
 }
-#endif
