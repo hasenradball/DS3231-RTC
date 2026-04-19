@@ -7,10 +7,19 @@ on:
 jobs:
   compile-examples:
     runs-on: ubuntu-latest
-
+    
+    strategy:
+      fail-fast: false
+      
+      matrix:
+        board:
+          - fqbn: arduino:avr:uno
+          - fqbn: arduino:avr:nano
+    
     steps:
-        - uses: actions/checkout@v3
-        - uses: arduino/compile-sketches@v1
+        - uses: actions/checkout@v6
+        - uses: arduino/compile-sketches@v2
           with:
+            fqbn: ${{ matrix.board.fqbn }}
             libraries: |
-              - source-path: ./
+              - source-path: .
