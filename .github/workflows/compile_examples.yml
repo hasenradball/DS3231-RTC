@@ -18,7 +18,7 @@ jobs:
     
     steps:
         - uses: actions/checkout@v6
-        - uses: arduino/compile-sketches@v2
+        - uses: arduino/compile-sketches@v1
           with:
             fqbn: ${{ matrix.board.fqbn }}
             libraries: |
