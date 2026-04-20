@@ -21,5 +21,8 @@ jobs:
         - uses: arduino/compile-sketches@v1
           with:
             fqbn: ${{ matrix.board.fqbn }}
+            cli-compile-flags: |
+              - --build-property
+              - compiler.cpp.extra_flags=-std=gnu++17
             libraries: |
               - source-path: .
