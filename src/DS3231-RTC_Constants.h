@@ -21,7 +21,7 @@ namespace DS3231_Constants {
     * To convert a Y2K timestamp to UNIX.
     * 
     */
-   constexpr unsigned long UNIX_OFFSET {946684800UL};
+   //constexpr unsigned long UNIX_OFFSET {946684800UL};
 
    /**
     * @brief Seconds from 1/1/1990 to 1/1/2000.
@@ -29,5 +29,5 @@ namespace DS3231_Constants {
     * To convert a Y2K timestamp to NTP.
     * 
     */
-   constexpr unsigned long  NTP_OFFSET {3155673600UL};
+   //constexpr unsigned long  NTP_OFFSET {3155673600UL};
 }
