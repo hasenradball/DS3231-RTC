@@ -24,6 +24,7 @@ Tested on:
 #include <Wire.h>
 #include <DS3231-RTC.h>
 
+
 // Interrupt frequency, in seconds
 constexpr uint8_t INTERRUPT_FREQUENCY {3U};
 constexpr int  RTC_INTERUPT_PIN {2};

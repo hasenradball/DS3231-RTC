@@ -1,5 +1,7 @@
 #include <Arduino.h>
+#include <Wire.h>
 #include <DS3231-RTC.h>
+
 
 void showTimeFormated(time_t t)
 {

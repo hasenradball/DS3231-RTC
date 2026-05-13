@@ -10,8 +10,8 @@ working as they should.
 
 */
 
-#include <DS3231-RTC.h>
 #include <Wire.h>
+#include <DS3231-RTC.h>
 
 DS3231::DS3231 myRTC;
 bool activate_32kHz = false;

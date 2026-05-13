@@ -6,7 +6,6 @@ Eric Ayars
 Test of set-time routines for a DS3231 RTC
 
 */
-
 #include <Wire.h>
 #include <DS3231-RTC.h>
 
