@@ -41,7 +41,7 @@ namespace DS3231 {
 #if DS3231_RTC_HAS_WIRE
    class TwoWireAdapter : public BusInterface {
       public:
-         explicit TwoWireAdapter(TwoWire &wire);
+         explicit TwoWireAdapter(TwoWire *wire=nullptr);
 
          void beginTransmission(uint8_t address) override;
          size_t write(uint8_t value) override;
@@ -51,7 +51,7 @@ namespace DS3231 {
          int available() override;
 
       private:
-         TwoWire &_wire;
+         TwoWire *_wire;
    };
 #endif
 
@@ -612,7 +612,7 @@ namespace DS3231 {
          * 
          */
 #if DS3231_RTC_HAS_WIRE
-         std::optional<TwoWireAdapter> _wire_adapter;
+         TwoWireAdapter _wire_adapter;
 #endif
 
          /**

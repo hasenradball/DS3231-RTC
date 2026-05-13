@@ -93,38 +93,38 @@ static uint8_t bcd2bin (uint8_t val) {
 }
 
 #if DS3231_RTC_HAS_WIRE
-DS3231::TwoWireAdapter::TwoWireAdapter(TwoWire &wire)
+DS3231::TwoWireAdapter::TwoWireAdapter(TwoWire *wire)
 : _wire(wire)
 {}
 
 void DS3231::TwoWireAdapter::beginTransmission(uint8_t address) {
-   _wire.beginTransmission(address);
+   _wire->beginTransmission(address);
 }
 
 size_t DS3231::TwoWireAdapter::write(uint8_t value) {
-   return _wire.write(value);
+   return _wire->write(value);
 }
 
 uint8_t DS3231::TwoWireAdapter::endTransmission() {
-   return _wire.endTransmission();
+   return _wire->endTransmission();
 }
 
 uint8_t DS3231::TwoWireAdapter::requestFrom(uint8_t address, uint8_t quantity) {
-   return _wire.requestFrom(address, quantity);
+   return _wire->requestFrom(address, quantity);
 }
 
 int DS3231::TwoWireAdapter::read() {
-   return _wire.read();
+   return _wire->read();
 }
 
 int DS3231::TwoWireAdapter::available() {
-   return _wire.available();
+   return _wire->available();
 }
 #endif
 
 #pragma region DateTime
 DS3231::DateTime::DateTime (time_t unix_timestamp)
-: _unix_timestamp{unix_timestamp}, _y2k_timestamp{static_cast<time_t>(unix_timestamp - DS3231_Constants::UNIX_OFFSET)}
+: _unix_timestamp{unix_timestamp}, _y2k_timestamp{static_cast<time_t>(unix_timestamp - UNIX_OFFSET)}
 {
    safe_gmtime(&_unix_timestamp, &_tm);
 }
@@ -207,7 +207,7 @@ DS3231::DateTime DS3231::RTClib::now(BusInterface &bus) {
 
 #if DS3231_RTC_HAS_WIRE
 DS3231::DateTime DS3231::RTClib::now(TwoWire &_Wire) {
-   TwoWireAdapter adapter(_Wire);
+   TwoWireAdapter adapter(&_Wire);
    return now(adapter);
 }
 #endif
@@ -215,17 +215,17 @@ DS3231::DateTime DS3231::RTClib::now(TwoWire &_Wire) {
 #pragma region DS3231
 #if DS3231_RTC_HAS_WIRE
 DS3231::DS3231::DS3231()
-: _wire_adapter(std::in_place, Wire), _bus(&*_wire_adapter)
+: _wire_adapter(&Wire), _bus(&_wire_adapter)
 {}
 
 DS3231::DS3231::DS3231(TwoWire &twowire)
-: _wire_adapter(std::in_place, twowire), _bus(&*_wire_adapter)
+: _wire_adapter(&twowire), _bus(&_wire_adapter)
 {}
 #endif
 
 DS3231::DS3231::DS3231(BusInterface &bus)
 #if DS3231_RTC_HAS_WIRE
-: _wire_adapter{std::nullopt}, _bus{&bus}
+: _wire_adapter{nullptr}, _bus{&bus}
 #else
 : _bus{&bus}
 #endif
