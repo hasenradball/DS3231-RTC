@@ -176,7 +176,7 @@ void DS3231::DateTime::set_timstamps() {
    _unix_timestamp = _y2k_timestamp + UNIX_OFFSET;
 #else
    _unix_timestamp = mktime(&_tm);
-   _y2k_timestamp = _unix_timestamp - DS3231_Constants::UNIX_OFFSET;
+   _y2k_timestamp = _unix_timestamp - UNIX_OFFSET;
 #endif
 }
 
@@ -343,21 +343,15 @@ void DS3231::DS3231::setYear(uint8_t year) {
    writeRegister(0x06, DS3231_Tools::decToBcd(year));
 }
 
-/**
- * @brief sets the clock mode to .
-
-*
-* @param h12 12h (true) or 24h (false)
-*/
-void DS3231::DS3231::setClockMode(bool h12) {
+void DS3231::DS3231::set12hourMode() {
    uint8_t temp_buffer = readRegisterRaw(0x02);
+   temp_buffer |= (1 << 6);
+   writeRegister(0x02, temp_buffer);
+}
 
-   if (h12) {
-      temp_buffer = temp_buffer | 0b01000000;
-   } else {
-      temp_buffer = temp_buffer & 0b10111111;
-   }
-
+void DS3231::DS3231::set24hourMode() {
+   uint8_t temp_buffer = readRegisterRaw(0x02);
+   temp_buffer &= ~(1 << 6);
    writeRegister(0x02, temp_buffer);
 }
 

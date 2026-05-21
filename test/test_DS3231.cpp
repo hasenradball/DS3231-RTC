@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <time.h>
 #include "DS3231-RTC.h"
 using ::testing::Return;
 

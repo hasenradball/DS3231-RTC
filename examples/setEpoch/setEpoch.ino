@@ -54,8 +54,7 @@ void setup()
 
    // feed UnixTimeStamp and don' t use localtime
    Clock.setEpoch(tstmp, false);
-   // set to 24h
-   Clock.setClockMode(false);
+   Clock.set24hourMode();
 
    // Just for verification of DS3231 Data
    // check now the data from ESP8266 and DS3231

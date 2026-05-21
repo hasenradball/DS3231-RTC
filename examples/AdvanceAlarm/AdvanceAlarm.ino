@@ -58,8 +58,7 @@ void setup() {
    Serial.begin(9600);
    while (!Serial);
 
-   // Set the DS3231 clock mode to 24-hour
-   myRTC.setClockMode(false); // false = not using the alternate, 12-hour mode
+   myRTC.set24hourMode();
 
    // Set the clock to an arbitrarily chosen time of
    // 00:00:00 midnight the morning of January 1, 2020

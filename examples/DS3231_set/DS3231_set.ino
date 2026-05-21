@@ -91,8 +91,7 @@ void loop()
    {
       getDateStuff(year, month, date, dOW, hour, minute, second);
 
-      myRTC.setClockMode(false); // set to 24h
-      // setClockMode(true); // set to 12h
+      myRTC.set24hourMode();
 
       myRTC.setYear(year);
       myRTC.setMonth(month);

@@ -41,7 +41,7 @@ namespace DS3231 {
 #if DS3231_RTC_HAS_WIRE
    class TwoWireAdapter : public BusInterface {
       public:
-         explicit TwoWireAdapter(TwoWire *wire=nullptr);
+         explicit TwoWireAdapter(TwoWire *wire = nullptr);
 
          void beginTransmission(uint8_t address) override;
          size_t write(uint8_t value) override;
@@ -388,12 +388,16 @@ namespace DS3231 {
          void setYear(uint8_t year);
 
          /**
-          * @brief Sets the Hour format (12h/24h) of the DS3231 module
+          * @brief Sets the clock hour to 12h format of the DS3231 module
           * 
-          * @param h12 true/high for 12 h format, false for 24 h
           */
-         void setClockMode(bool h12 = false);
+         void set12hourMode();
 
+         /**
+          * @brief Sets the clock hour to 24h format of the DS3231 module
+          * 
+          */
+         void set24hourMode();
 
          // ************************************
          //        Temperature Getter function

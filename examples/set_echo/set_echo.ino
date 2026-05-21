@@ -76,7 +76,7 @@ void loop() {
    if (Serial.available()) {
       inputDateFromSerial();
 
-      myRTC.setClockMode(false);  // set to 24h
+      myRTC.set24hourMode();
 
       myRTC.setYear(year);
       myRTC.setMonth(month);
