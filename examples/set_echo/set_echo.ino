@@ -48,6 +48,7 @@ void setup() {
 
    // Start the I2C interface
    Wire.begin();
+   myRTC.begin();
 
    // Request the time correction on the Serial
    delay(4000);
@@ -75,8 +76,6 @@ void loop() {
    // a time correction so set the clock accordingly.
    if (Serial.available()) {
       inputDateFromSerial();
-
-      myRTC.set24hourMode();
 
       myRTC.setYear(year);
       myRTC.setMonth(month);

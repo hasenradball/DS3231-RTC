@@ -25,6 +25,7 @@ void setup()
 {
    Serial.begin(115200);
    Wire.begin();
+   Clock.begin();
    delay(500);
    Serial.println("\n\n\nTest of DS3231 - setEpoch()\n\n\n");
 
@@ -54,8 +55,7 @@ void setup()
 
    // feed UnixTimeStamp and don' t use localtime
    Clock.setEpoch(tstmp, false);
-   Clock.set24hourMode();
-
+   
    // Just for verification of DS3231 Data
    // check now the data from ESP8266 and DS3231
    // get year

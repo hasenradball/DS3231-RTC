@@ -29,6 +29,8 @@ void setup() {
    // Begin Serial communication
    Serial.begin(57600);
 
+   myRTC.begin();
+
    // Setup alarm one to fire every minute
    // No need to turn Alarm one on.
    myRTC.turnOffAlarm(1);

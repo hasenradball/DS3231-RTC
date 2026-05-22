@@ -28,6 +28,7 @@ void setup() {
 
    // Start the I2C interface
    Wire.begin();
+   myRTC.begin();
 
 
   for (int i=0; i<5; i++){

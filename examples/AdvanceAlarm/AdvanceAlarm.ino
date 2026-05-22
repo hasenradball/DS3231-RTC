@@ -58,7 +58,7 @@ void setup() {
    Serial.begin(9600);
    while (!Serial);
 
-   myRTC.set24hourMode();
+   myRTC.begin();
 
    // Set the clock to an arbitrarily chosen time of
    // 00:00:00 midnight the morning of January 1, 2020

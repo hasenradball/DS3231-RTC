@@ -26,6 +26,7 @@ void setup() {
  
    // Start the serial interface
    Serial.begin(57600);
+   myRTC.begin();
 }
 
 void loop() {

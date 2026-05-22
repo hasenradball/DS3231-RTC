@@ -64,6 +64,7 @@ void setup() {
    while (!Serial);
    Serial.println();
    Serial.println("Starting Serial");
+   myRTC.begin();
 
    // Assign parameter values for Alarm 1
    alarmDay = 0;

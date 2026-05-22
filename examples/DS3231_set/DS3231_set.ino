@@ -80,6 +80,8 @@ void setup()
 
    // Start the I2C interface
    Wire.begin();
+   myRTC.begin();
+
 }
 
 void loop()
@@ -90,8 +92,6 @@ void loop()
    if (Serial.available())
    {
       getDateStuff(year, month, date, dOW, hour, minute, second);
-
-      myRTC.set24hourMode();
 
       myRTC.setYear(year);
       myRTC.setMonth(month);

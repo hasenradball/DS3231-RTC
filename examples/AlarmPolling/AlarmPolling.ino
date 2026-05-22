@@ -20,6 +20,7 @@ DS3231::DS3231 myRTC;
 void setup() {
    // Begin I2C communication
    Wire.begin();
+   myRTC.begin();
 
    // Setup alarm one to fire every second
    myRTC.turnOffAlarm(1);

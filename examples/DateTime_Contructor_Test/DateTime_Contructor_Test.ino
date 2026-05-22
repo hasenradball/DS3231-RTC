@@ -47,7 +47,7 @@ void setup()
    // SDA = 0, SCL = 2
    Wire.begin(4U, 5U);
 #endif
-
+   Clock.begin();
    // set the Ds3131 with a specific UnixTimestamp
    // ==>    Tue Aug 16 2022 10:00:00 GMT+0000 - weekday 2 (0 = Sunday); CW 33; yearday 227
    // ==>    1660644000
@@ -58,8 +58,7 @@ void setup()
    Serial.println(tstmp);
 
    // feed UnixTimeStamp and don' t use localtime
-   Clock.setEpoch(tstmp, false);
-   Clock.set24hourMode();
+   Clock.setEpoch(tstmp, false);   
 
    // Just for verification of DS3231 Data
    // check now the data from ESP8266 and DS3231
