@@ -21,8 +21,11 @@ getMinute           KEYWORD2
 getHour             KEYWORD2
 getDoW              KEYWORD2
 getDate             KEYWORD2
+getDay              KEYWORD2
 getMonth            KEYWORD2
 getYear             KEYWORD2
+getYearDay          KEYWORD2
+setEpoch            KEYWORD2
 setSecond           KEYWORD2
 setMinute           KEYWORD2
 setHour             KEYWORD2
@@ -30,7 +33,10 @@ setDoW              KEYWORD2
 setDate             KEYWORD2
 setMonth            KEYWORD2
 setYear             KEYWORD2
-setClockMode        KEYWORD2
+set12hourMode       KEYWORD2
+set24hourMode       KEYWORD2
+begin               KEYWORD2
+is24hourModeActive  KEYWORD2
 getTemperature      KEYWORD2
 getA1Time           KEYWORD2
 getA2Time           KEYWORD2
