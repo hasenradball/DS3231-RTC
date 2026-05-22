@@ -83,11 +83,12 @@ static int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t 
    return days;
 }
 
-// Slightly modified from JeeLabs / Ladyada
-// Get all date/time at once to avoid rollover (e.g., minute/second don't match)
-// Commented to avoid compiler warnings, but keeping in case we want this
-// eventually
-// static uint8_t bin2bcd (uint8_t val) { return val + 6 * (val / 10); }
+/**
+ * @brief calculates binary coded decimal -> decimal, by shift/subtraction
+ * 
+ * @param val binary coded decimal value
+ * @return uint8_t decimal value
+ */
 static uint8_t bcd2bin (uint8_t val) {
    return val - 6 * (val >> 4);
 }

@@ -324,6 +324,57 @@ See also [Working with the DS3231 libraries and interrupts](https://github.com/I
 [back to top](#ds3231-rtc-library)
 <hr>
 
+## Unit Tests
+The project contains unit tests.
+These tests validate:
+
+* some helper functions
+* getter functions
+
+### Run tests locally
+The tests are based on GoogleTest and are built with CMake.
+
+Required tools:
+
+* CMake
+* a C++17 compatible compiler
+
+#### Windows
+With Visual Studio or Visual Studio Build Tools installed, run the commands in a Developer PowerShell:
+
+```powershell
+# Generate Build System
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+# Build a Project
+cmake --build build
+# Execute Tests
+ctest --test-dir build --output-on-failure
+```
+
+#### Linux
+Install CMake and a compiler toolchain, for example `g++` or `clang++`, and run:
+
+```bash
+# Generate Build System
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+# Build a Project
+cmake --build build
+# Execute Tests
+ctest --test-dir build --output-on-failure
+```
+
+#### macOS
+Install Xcode Command Line Tools and CMake, then run:
+
+```bash
+# Generate Build System
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+# Build a Project
+cmake --build build
+# Execute Tests
+ctest --test-dir build --output-on-failure
+```
+
 ## Contributing
 
 If you want to contribute to this project:
