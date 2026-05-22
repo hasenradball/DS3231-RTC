@@ -1,5 +1,0 @@
-if(EXISTS "/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231[1]_tests.cmake")
-  include("/Users/frank/Documents/git_repos/DS3231-RTC/build/test/test_DS3231[1]_tests.cmake")
-else()
-  add_test(test_DS3231_NOT_BUILT test_DS3231_NOT_BUILT)
-endif()

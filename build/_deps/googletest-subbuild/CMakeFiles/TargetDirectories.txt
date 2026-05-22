@@ -1,3 +1,0 @@
-/Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-subbuild/CMakeFiles/googletest-populate.dir
-/Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-subbuild/CMakeFiles/edit_cache.dir
-/Users/frank/Documents/git_repos/DS3231-RTC/build/_deps/googletest-subbuild/CMakeFiles/rebuild_cache.dir
