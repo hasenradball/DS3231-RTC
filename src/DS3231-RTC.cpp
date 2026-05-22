@@ -34,19 +34,19 @@
 
 static const uint8_t daysInMonth[] PROGMEM = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-static void safe_gmtime(const time_t *timestamp, struct tm *result) {
+static void safe_gmtime(const time_t *timestamp, struct tm *timestruct) {
 #if defined(_WIN32)
-   gmtime_s(result, timestamp);
+   gmtime_s(timestruct, timestamp);
 #else
-   gmtime_r(timestamp, result);
+   gmtime_r(timestamp, timestruct);
 #endif
 }
 
-static void safe_localtime(const time_t *timestamp, struct tm *result) {
+static void safe_localtime(const time_t *timestamp, struct tm *timestruct) {
 #if defined(_WIN32)
-   localtime_s(result, timestamp);
+   localtime_s(timestruct, timestamp);
 #else
-   localtime_r(timestamp, result);
+   localtime_r(timestamp, timestruct);
 #endif
 }
 
@@ -119,6 +119,12 @@ int DS3231::TwoWireAdapter::read() {
 
 int DS3231::TwoWireAdapter::available() {
    return _wire->available();
+}
+
+void DS3231::TwoWireAdapter::begin() {
+   if (_wire) {
+      _wire->begin();
+   }
 }
 #endif
 
@@ -193,11 +199,23 @@ DS3231::DateTime DS3231::RTClib::now(BusInterface &bus) {
 
    bus.requestFrom(DS3231_Constants::DS3231_I2C_ADDRESS, 7);
    int8_t sec = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x7F);
-   int8_t min = bcd2bin(static_cast<uint8_t>(bus.read()));
-   int8_t hour = bcd2bin(static_cast<uint8_t>(bus.read()));
-   int8_t wday = bcd2bin(static_cast<uint8_t>(bus.read()))-1;
-   int8_t day = bcd2bin(static_cast<uint8_t>(bus.read()));
-   int8_t month = bcd2bin(static_cast<uint8_t>(bus.read()));
+   int8_t min = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x7F);
+   
+   // Read hour register and respect 12/24h mode (Bit 6)
+   uint8_t hour_byte = static_cast<uint8_t>(bus.read());
+   bool h12 = hour_byte & 0b01000000;
+   int8_t hour;
+   if (h12) {
+      // 12-hour mode: only use bits 4-0 for hour value
+      hour = bcd2bin(hour_byte & 0b00011111);
+   } else {
+      // 24-hour mode: use bits 5-0 for hour value
+      hour = bcd2bin(hour_byte & 0b00111111);
+   }
+   
+   int8_t wday = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x07) - 1;
+   int8_t day = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x3F);
+   int8_t month = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x1F);
    int16_t year = bcd2bin(static_cast<uint8_t>(bus.read())) + 2000;
    int16_t yday = calcYearDay(year, month, day);
    int16_t dst = -1;
@@ -251,6 +269,7 @@ uint8_t DS3231::DS3231::getHour(bool& h12, bool& PM_time) {
       hour = DS3231_Tools::bcdToDec(temp_buffer & 0b00011111);
    }
    else {
+      PM_time = 0;
       hour = DS3231_Tools::bcdToDec(temp_buffer & 0b00111111);
    }
    return hour;
@@ -344,15 +363,79 @@ void DS3231::DS3231::setYear(uint8_t year) {
 }
 
 void DS3231::DS3231::set12hourMode() {
-   uint8_t temp_buffer = readRegisterRaw(0x02);
-   temp_buffer |= (1 << 6);
-   writeRegister(0x02, temp_buffer);
+   uint8_t hour_byte = readRegisterRaw(0x02);
+   bool currently_24h = !(hour_byte & 0b01000000);  // Bit 6 == 0 means 24h mode
+   
+   if (currently_24h) {
+      // Convert from 24h to 12h
+      uint8_t hour_24 = DS3231_Tools::bcdToDec(hour_byte & 0b00111111);
+      uint8_t hour_12;
+      bool is_pm = false;
+      
+      if (hour_24 == 0) {
+         hour_12 = 12;  // 0:00 → 12:00 AM
+         is_pm = false;
+      } else if (hour_24 < 12) {
+         hour_12 = hour_24;  // 1:00-11:00 → 1:00-11:00 AM
+         is_pm = false;
+      } else if (hour_24 == 12) {
+         hour_12 = 12;  // 12:00 → 12:00 PM
+         is_pm = true;
+      } else {
+         hour_12 = hour_24 - 12;  // 13:00-23:00 → 1:00-11:00 PM
+         is_pm = true;
+      }
+      
+      // Build new register value with 12h mode, PM flag, and new hour
+      uint8_t new_hour = DS3231_Tools::decToBcd(hour_12);
+      if (is_pm) {
+         new_hour |= 0b01100000;  // Set Bit 6 (12h mode) and Bit 5 (PM)
+      } else {
+         new_hour |= 0b01000000;  // Set Bit 6 (12h mode) only
+      }
+      
+      writeRegister(0x02, new_hour);
+   }
+   // If already in 12h mode, do nothing
 }
 
 void DS3231::DS3231::set24hourMode() {
-   uint8_t temp_buffer = readRegisterRaw(0x02);
-   temp_buffer &= ~(1 << 6);
-   writeRegister(0x02, temp_buffer);
+   uint8_t hour_byte = readRegisterRaw(0x02);
+   bool currently_12h = (hour_byte & 0b01000000);  // Bit 6 == 1 means 12h mode
+   
+   if (currently_12h) {
+      // Convert from 12h to 24h
+      bool is_pm = (hour_byte & 0b00100000);
+      uint8_t hour_12 = DS3231_Tools::bcdToDec(hour_byte & 0b00011111);
+      uint8_t hour_24;
+      
+      if (hour_12 == 12) {
+         hour_24 = is_pm ? 12 : 0;  // 12:00 AM → 0:00, 12:00 PM → 12:00
+      } else if (is_pm) {
+         hour_24 = hour_12 + 12;  // 1:00-11:00 PM → 13:00-23:00
+      } else {
+         hour_24 = hour_12;  // 1:00-11:00 AM → 1:00-11:00
+      }
+      
+      // Build new register value with 24h mode (Bit 6 = 0)
+      uint8_t new_hour = DS3231_Tools::decToBcd(hour_24) & 0b10111111;  // Clear Bit 6
+      
+      writeRegister(0x02, new_hour);
+   }
+   // If already in 24h mode, do nothing
+}
+
+void DS3231::DS3231::begin() {
+#if DS3231_RTC_HAS_WIRE
+   _wire_adapter.begin();
+#endif
+   set24hourMode();
+}
+
+bool DS3231::DS3231::is24hourModeActive() {
+   uint8_t hour_byte = readRegisterRaw(0x02);
+   bool currently_12h = (hour_byte & 0b01000000);  // Bit 6 == 1 means 12h mode
+   return !currently_12h;
 }
 
 float DS3231::DS3231::getTemperature() {
