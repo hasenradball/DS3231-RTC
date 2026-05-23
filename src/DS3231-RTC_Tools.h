@@ -16,7 +16,7 @@ namespace DS3231_Tools {
     * @return uint8_t binary coded decimal value
     */
    inline uint8_t decToBcd(uint8_t value) {
-      return ( (value / 10 * 16) + (value % 10) );
+      return value + 6 * (value / 10);
    }
 
    /**
@@ -25,6 +25,6 @@ namespace DS3231_Tools {
     * @return uint8_t decimal value
     */
    inline uint8_t bcdToDec(uint8_t value) {
-      return ( (value / 16 * 10) + (value % 16) );
+      return value - 6 * (value >> 4);
    }
 }

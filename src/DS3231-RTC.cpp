@@ -83,15 +83,6 @@ static int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t 
    return days;
 }
 
-/**
- * @brief calculates binary coded decimal -> decimal, by shift/subtraction
- * 
- * @param val binary coded decimal value
- * @return uint8_t decimal value
- */
-static uint8_t bcd2bin (uint8_t val) {
-   return val - 6 * (val >> 4);
-}
 
 #if DS3231_RTC_HAS_WIRE
 DS3231::TwoWireAdapter::TwoWireAdapter(TwoWire *wire)
@@ -199,8 +190,8 @@ DS3231::DateTime DS3231::RTClib::now(BusInterface &bus) {
    bus.endTransmission();
 
    bus.requestFrom(DS3231_Constants::DS3231_I2C_ADDRESS, 7);
-   int8_t sec = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x7F);
-   int8_t min = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x7F);
+   int8_t sec = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read()) & 0x7F);
+   int8_t min = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read()) & 0x7F);
    
    // Read hour register and respect 12/24h mode (Bit 6)
    uint8_t hour_byte = static_cast<uint8_t>(bus.read());
@@ -208,16 +199,16 @@ DS3231::DateTime DS3231::RTClib::now(BusInterface &bus) {
    int8_t hour;
    if (h12) {
       // 12-hour mode: only use bits 4-0 for hour value
-      hour = bcd2bin(hour_byte & 0b00011111);
+      hour = DS3231_Tools::bcdToDec(hour_byte & 0b00011111);
    } else {
       // 24-hour mode: use bits 5-0 for hour value
-      hour = bcd2bin(hour_byte & 0b00111111);
+      hour = DS3231_Tools::bcdToDec(hour_byte & 0b00111111);
    }
    
-   int8_t wday = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x07) - 1;
-   int8_t day = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x3F);
-   int8_t month = bcd2bin(static_cast<uint8_t>(bus.read()) & 0x1F);
-   int16_t year = bcd2bin(static_cast<uint8_t>(bus.read())) + 2000;
+   int8_t wday = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read()) & 0x07) - 1;
+   int8_t day = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read()) & 0x3F);
+   int8_t month = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read()) & 0x1F);
+   int16_t year = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read())) + 2000;
    int16_t yday = calcYearDay(year, month, day);
    int16_t dst = -1;
 
