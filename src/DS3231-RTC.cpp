@@ -12,27 +12,10 @@
 #include <string.h>
 #include <math.h>
 
-// These included for the DateTime class inclusion; will try to find a way to
-// not need them in the future...
-#if defined(__AVR__)
-#include <avr/pgmspace.h>
-#elif defined(ESP8266)
-#include <pgmspace.h>
-#endif
-
-#ifndef PROGMEM
-#define PROGMEM
-#endif
-
-#ifndef pgm_read_uint8_t
-#define pgm_read_uint8_t(addr) (*(addr))
-#endif
 
 // *****************************************
 //  Static Functions only used in this file
 // *****************************************
-
-static const uint8_t daysInMonth[] PROGMEM = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 static void safe_gmtime(const time_t *timestamp, struct tm *timestruct) {
 #if defined(_WIN32)
@@ -49,40 +32,6 @@ static void safe_localtime(const time_t *timestamp, struct tm *timestruct) {
    localtime_r(timestamp, timestruct);
 #endif
 }
-
-/**
- * @brief function which calculates if a year is a leap year
- *
- * @param year
- * @return true
- * @return false
- */
-static bool isleapYear(const int16_t year) {
-   // check if divisible by 4
-   if (year % 4) {
-      return false;
-   }
-   // only check OR (second condition), when first failed
-   return (year % 100 || year % 400 == 0);
-}
-
-/**
- * @brief calculate the days since January 1 (0...365)
- *
- * @param year e.g.: 2022
- * @param month 1...12
- * @param day 1...31
- * @return int16_t
- */
-static int16_t calcYearDay(const int16_t year, const int8_t month, const int8_t day) {
-   uint16_t days = day - 1;
-   for (uint8_t i = 1; i < month; ++i)
-      days += pgm_read_uint8_t(daysInMonth + i - 1);
-   if (month > 2 && isleapYear(year))
-      ++days;
-   return days;
-}
-
 
 #if DS3231_RTC_HAS_WIRE
 DS3231::TwoWireAdapter::TwoWireAdapter(TwoWire *wire)
@@ -164,7 +113,7 @@ DS3231::DateTime::DateTime(const char *date, const char *time) {
    _tm.tm_hour = hour;
    _tm.tm_min = min;
    _tm.tm_sec = sec;
-   _tm.tm_yday = calcYearDay(year, month, day);
+   _tm.tm_yday = DS3231_Tools::calcYearDay(year, month, day);
    set_timstamps();
 }
 
@@ -209,7 +158,7 @@ DS3231::DateTime DS3231::RTClib::now(BusInterface &bus) {
    int8_t day = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read()) & 0x3F);
    int8_t month = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read()) & 0x1F);
    int16_t year = DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus.read())) + 2000;
-   int16_t yday = calcYearDay(year, month, day);
+   int16_t yday = DS3231_Tools::calcYearDay(year, month, day);
    int16_t dst = -1;
 
    return DateTime{year, month, day, hour, min, sec, wday, yday, dst};

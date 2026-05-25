@@ -34,4 +34,10 @@ namespace DS3231_Constants {
     * 
     */
    constexpr unsigned int DS3231_I2C_ADDRESS {0x68};
+
+   /**
+    * @brief constant array for days in month, used for calc days in year
+    * 
+    */
+   constexpr uint8_t daysInMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 }

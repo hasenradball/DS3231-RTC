@@ -401,21 +401,21 @@ namespace DS3231 {
          void set24hourMode();
 
          /**
-          * @brief Initialize the DS3231 instance after I2C bus is ready.
-          * 
-          * This should be called after Wire.begin() when using the default
-          * TwoWire interface, and ensures the clock is placed in 24h mode.
-          */
-         void begin();
-
-         /**
           * @brief check if 24h hour mode is active
           * 
           * @return true if 24 h mode is set
           * @return false if 12 hour mode is set
           */
          bool is24hourModeActive();
-
+         
+         /**
+          * @brief Initialize the DS3231 instance after I2C bus is ready.
+          * 
+          * This should be called after Wire.begin() when using the default
+          * TwoWire interface, and ensures the clock is placed in 24h mode.
+          */
+         void begin();
+         
          // ************************************
          //        Temperature Getter function
          // ************************************
