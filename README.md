@@ -1,6 +1,7 @@
 # DS3231-RTC Library
 [![Spell Check](https://github.com/hasenradball/DS3231-RTC/actions/workflows/spell_checker.yml/badge.svg)](https://github.com/hasenradball/DS3231-RTC/actions/workflows/spell_checker.yml)
 [![Compile Examples](https://github.com/hasenradball/DS3231-RTC/actions/workflows/compile_examples.yml/badge.svg)](https://github.com/hasenradball/DS3231-RTC/actions/workflows/compile_examples.yml)
+[![Unit Tests](https://github.com/hasenradball/DS3231-RTC/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/hasenradball/DS3231-RTC/actions/workflows/unit_tests.yml)
 
 The **great** C++ Library for the DS3231 real-time clock (RTC) module.  
 
