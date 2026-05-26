@@ -1,8 +1,6 @@
 /**
  * @file    DS3231-RTC.h
  * @author  Frank Häfele
- * @date    31.03.2026
- * @version 1.2.0
  * @brief   Real-Time clock library based on Arduino Framework
  */
 

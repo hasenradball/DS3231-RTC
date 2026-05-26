@@ -349,6 +349,8 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 # Execute Tests
 ctest --test-dir build --output-on-failure
+or 
+./build/test/test_DS3231 --gtest_color=yes
 ```
 
 #### Linux
@@ -361,6 +363,7 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 # Execute Tests
 ctest --test-dir build --output-on-failure
+./build/test/test_DS3231 --gtest_color=yes
 ```
 
 #### macOS
@@ -373,6 +376,7 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 # Execute Tests
 ctest --test-dir build --output-on-failure
+./build/test/test_DS3231 --gtest_color=yes
 ```
 
 ## Contributing

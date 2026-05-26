@@ -5,21 +5,64 @@
 #include "DS3231-RTC.h"
 using ::testing::Return;
 
-
-TEST(DS3231Tools, BinaryDecodedDecimalToDecimal_22) {
-   EXPECT_EQ(DS3231_Tools::bcdToDec(0x22), 22U);
+TEST(DS3231Tools_BCD, BinaryDecodedDecimalToDecimal_0) {
+   EXPECT_EQ(DS3231_Tools::bcdToDec(0x0), 0U);
 }
 
-TEST(DS3231Tools, BinaryDecodedDecimalToDecimal_59) {
+TEST(DS3231Tools_BCD, BinaryDecodedDecimalToDecimal_9) {
+   EXPECT_EQ(DS3231_Tools::bcdToDec(0x9), 9U);
+}
+
+TEST(DS3231Tools_BCD, BinaryDecodedDecimalToDecimal_10) {
+   EXPECT_EQ(DS3231_Tools::bcdToDec(0x10), 10U);
+}
+
+TEST(DS3231Tools_BCD, BinaryDecodedDecimalToDecimal_59) {
    EXPECT_EQ(DS3231_Tools::bcdToDec(0x59), 59U);
 }
 
-TEST(DS3231Tools, DecimalToBinaryDecodedDecimal_22) {
-   EXPECT_EQ(DS3231_Tools::decToBcd(22U), 0x22);
+TEST(DS3231Tools_BCD, DecimalToBinaryDecodedDecimal_0) {
+   EXPECT_EQ(DS3231_Tools::decToBcd(0U), 0x0);
 }
 
-TEST(DS3231Tools, DecimalToBinaryDecodedDecimal_59) {
+TEST(DS3231Tools_BCD, DecimalToBinaryDecodedDecimal_9) {
+   EXPECT_EQ(DS3231_Tools::decToBcd(9U), 0x9);
+}
+
+TEST(DS3231Tools_BCD, DecimalToBinaryDecodedDecimal_10) {
+   EXPECT_EQ(DS3231_Tools::decToBcd(10U), 0x10);
+}
+
+TEST(DS3231Tools_BCD, DecimalToBinaryDecodedDecimal_59) {
    EXPECT_EQ(DS3231_Tools::decToBcd(59U), 0x59);
+}
+
+TEST(DS3231Tools_leapYear, IsLeapYear_2023) {
+   EXPECT_FALSE(DS3231_Tools::isleapYear(2023));
+}
+
+TEST(DS3231Tools_leapYear, IsLeapYear_2024) {
+   EXPECT_TRUE(DS3231_Tools::isleapYear(2024));
+}
+
+TEST(DS3231Tools_leapYear, IsLeapYear_2032) {
+   EXPECT_TRUE(DS3231_Tools::isleapYear(2032));
+}
+
+TEST(DS3231Tools_leapYear, IsLeapYear_1700) {
+   EXPECT_FALSE(DS3231_Tools::isleapYear(1700));
+}
+
+TEST(DS3231Tools_leapYear, IsLeapYear_1800) {
+   EXPECT_FALSE(DS3231_Tools::isleapYear(1800));
+}
+
+TEST(DS3231Tools_leapYear, IsLeapYear_1900) {
+   EXPECT_FALSE(DS3231_Tools::isleapYear(1900));
+}
+
+TEST(DS3231Tools_leapYear, IsLeapYear_2000) {
+   EXPECT_TRUE(DS3231_Tools::isleapYear(2000));
 }
 
 class MockBus : public DS3231::BusInterface {

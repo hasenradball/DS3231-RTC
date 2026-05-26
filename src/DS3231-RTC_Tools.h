@@ -1,8 +1,6 @@
 /**
  * @file    DS3231-RTC_Tools.h
  * @author  Frank Häfele
- * @date    31.03.2026
- * @version 1.2.0
  * @brief   Tools for the DS3231-RTC lib
  */
 
