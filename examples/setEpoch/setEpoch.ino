@@ -16,7 +16,7 @@ void showTimeFormated(time_t t)
 }
 
 // unix timestamp of: Tue Aug 16 2022 10:00:00 GMT+0000
-constexpr time_t tstmp{1660644000UL};
+constexpr time_t timestamp{1660644000UL};
 
 DS3231::RTClib myRTC;
 DS3231::DS3231 Clock;
@@ -54,7 +54,7 @@ void setup()
    Serial.println("UnixTimestamp - 1660644000");
 
    // feed UnixTimeStamp and don' t use localtime
-   Clock.setEpoch(tstmp, false);
+   Clock.setEpoch(timestamp, false);
    
    // Just for verification of DS3231 Data
    // check now the data from ESP8266 and DS3231
@@ -106,7 +106,7 @@ void setup()
 
    Serial.print("\n\n Output of Struct tm:  ");
    // Use above defined function
-   showTimeFormated(tstmp);
+   showTimeFormated(timestamp);
 
    // Use smart print function from DateTime class
    Serial.print("\nUse strf_DateTime function:\n ");
