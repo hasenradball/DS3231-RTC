@@ -10,29 +10,32 @@ working as they should.
 
 */
 
-#include <DS3231-RTC.h>
 #include <Wire.h>
+#include <DS3231-RTC.h>
 
-DS3231 myRTC;
-byte j;
-bool on = false;
+DS3231::DS3231 myRTC;
+bool activate_32kHz = false;
 
-void setup() {
-	// Start the I2C interface
-	Wire.begin();
-	// Start the serial interface
-	Serial.begin(57600);
+void setup()
+{
+   // Start the I2C interface
+   Wire.begin();
+   // Start the serial interface
+   Serial.begin(57600);
+   myRTC.begin();
 }
 
-void loop() {
-	for (j=0;j<4;j++) {
-		// invert state of 32kHz oscillator.
-		on = !on;
-		myRTC.enable32kHz(on);
-		// Turn on oscillator pin, frequency j
-		myRTC.enableOscillator(true, false, j);
-		delay(4000);
-	}
-	// So... The 32kHz oscillator (pin 1) will turn on or off once each 2s,
-	// and the oscillator out pin (pin 3) will cycle through frequencies.
+void loop()
+{
+   for (byte j = 0; j < 4; ++j)
+   {
+      // invert state of 32kHz oscillator.
+      activate_32kHz = !activate_32kHz;
+      myRTC.enable32kHz(activate_32kHz);
+      // Turn on oscillator pin, frequency j
+      myRTC.enableOscillator(true, false, j);
+      delay(4000);
+   }
+   // So... The 32kHz oscillator (pin 1) will turn on or off once each 2s,
+   // and the oscillator out pin (pin 3) will cycle through frequencies.
 }

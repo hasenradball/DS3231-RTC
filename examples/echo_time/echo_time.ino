@@ -16,18 +16,19 @@ Andy Wickert
 #include <Wire.h>
 #include <DS3231-RTC.h>
 
-DS3231 myRTC;
+DS3231::DS3231 myRTC;
 
 bool century = false;
 bool h12Flag;
 bool pmFlag;
 
 void setup() {
-	// Start the serial port
-	Serial.begin(57600);
+   // Start the serial port
+   Serial.begin(57600);
 
-	// Start the I2C interface
-	Wire.begin();
+   // Start the I2C interface
+   Wire.begin();
+   myRTC.begin();
 
 
   for (int i=0; i<5; i++){

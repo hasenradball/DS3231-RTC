@@ -1,0 +1,41 @@
+/**
+ * @file    DS3231-RTC_Constants.h
+ * @author  Frank Häfele
+ * @brief   Constants for the DS3231-RTC lib
+ */
+
+#pragma once
+
+#ifndef UNIX_OFFSET
+   /**
+    * @brief Seconds from 1/1/1970 to 1/1/2000.
+    * AKA Difference between the Y2K and the UNIX epochs, in seconds.
+    * To convert a Y2K timestamp to UNIX.
+    * 
+    */
+   constexpr unsigned long UNIX_OFFSET {946684800UL};
+#endif
+
+#ifndef NTP_OFFSET
+   /**
+    * @brief Seconds from 1/1/1990 to 1/1/2000.
+    * AKA Difference between the Y2K and the NTP epochs, in seconds.
+    * To convert a Y2K timestamp to NTP.
+    * 
+    */
+   constexpr unsigned long  NTP_OFFSET {3155673600UL};
+#endif
+
+namespace DS3231_Constants {
+   /**
+    * @brief I2C Address of the DS3231 Module
+    * 
+    */
+   constexpr unsigned int DS3231_I2C_ADDRESS {0x68};
+
+   /**
+    * @brief constant array for days in month, used for calc days in year
+    * 
+    */
+   constexpr uint8_t daysInMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+}

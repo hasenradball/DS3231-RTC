@@ -21,7 +21,9 @@ Olivier Staquet
 #include <Wire.h>
 #include <DS3231-RTC.h>
 
-DS3231 myRTC;
+void inputDateFromSerial(void);
+
+DS3231::DS3231 myRTC;
 
 byte year;
 byte month;
@@ -41,25 +43,26 @@ bool pmFlag;
  *  - Explain to the user how to use the program
  *****************************************************************************************************/
 void setup() {
-  // Start the serial port
-  Serial.begin(57600);
+   // Start the serial port
+   Serial.begin(57600);
 
-  // Start the I2C interface
-  Wire.begin();
+   // Start the I2C interface
+   Wire.begin();
+   myRTC.begin();
 
-  // Request the time correction on the Serial
-  delay(4000);
-  Serial.println("Format YYMMDDwhhmmssx");
-  Serial.println("Where YY = Year (ex. 20 for 2020)");
-  Serial.println("      MM = Month (ex. 04 for April)");
-  Serial.println("      DD = Day of month (ex. 09 for 9th)");
-  Serial.println("      w  = Day of week from 1 to 7, 1 = Sunday (ex. 5 for Thursday)");
-  Serial.println("      hh = hours in 24h format (ex. 09 for 9AM or 21 for 9PM)");
-  Serial.println("      mm = minutes (ex. 02)");
-  Serial.println("      ss = seconds (ex. 42)");
-  Serial.println("Example for input : 2004095090242x");
-  Serial.println("-----------------------------------------------------------------------------");
-  Serial.println("Please enter the current time to set on DS3231 ended by 'x':");
+   // Request the time correction on the Serial
+   delay(4000);
+   Serial.println("Format YYMMDDwhhmmssx");
+   Serial.println("Where YY = Year (ex. 20 for 2020)");
+   Serial.println("      MM = Month (ex. 04 for April)");
+   Serial.println("      DD = Day of month (ex. 09 for 9th)");
+   Serial.println("      w  = Day of week from 1 to 7, 1 = Sunday (ex. 5 for Thursday)");
+   Serial.println("      hh = hours in 24h format (ex. 09 for 9AM or 21 for 9PM)");
+   Serial.println("      mm = minutes (ex. 02)");
+   Serial.println("      ss = seconds (ex. 42)");
+   Serial.println("Example for input : 2004095090242x");
+   Serial.println("-----------------------------------------------------------------------------");
+   Serial.println("Please enter the current time to set on DS3231 ended by 'x':");
 }
 
 /*****************************************************************************************************
@@ -69,41 +72,39 @@ void setup() {
  *  - Echo the value from the DS3231 during 5 seconds
  *****************************************************************************************************/
 void loop() {
-  // If something is coming in on the serial line, it's
-  // a time correction so set the clock accordingly.
-  if (Serial.available()) {
-    inputDateFromSerial();
+   // If something is coming in on the serial line, it's
+   // a time correction so set the clock accordingly.
+   if (Serial.available()) {
+      inputDateFromSerial();
 
-    myRTC.setClockMode(false);  // set to 24h
+      myRTC.setYear(year);
+      myRTC.setMonth(month);
+      myRTC.setDate(date);
+      myRTC.setDoW(dow);
+      myRTC.setHour(hour);
+      myRTC.setMinute(minute);
+      myRTC.setSecond(second);
 
-    myRTC.setYear(year);
-    myRTC.setMonth(month);
-    myRTC.setDate(date);
-    myRTC.setDoW(dow);
-    myRTC.setHour(hour);
-    myRTC.setMinute(minute);
-    myRTC.setSecond(second);
+      // Give time at next five seconds
+      for (uint8_t i = 0; i < 5; i++){
+         delay(1000);
+         Serial.print(myRTC.getYear(), DEC);
+         Serial.print("-");
+         Serial.print(myRTC.getMonth(century), DEC);
+         Serial.print("-");
+         Serial.print(myRTC.getDate(), DEC);
+         Serial.print(" ");
+         Serial.print(myRTC.getHour(h12Flag, pmFlag), DEC); //24-hr
+         Serial.print(":");
+         Serial.print(myRTC.getMinute(), DEC);
+         Serial.print(":");
+         Serial.println(myRTC.getSecond(), DEC);
+      }
 
-    // Give time at next five seconds
-    for (uint8_t i = 0; i < 5; i++){
-        delay(1000);
-        Serial.print(myRTC.getYear(), DEC);
-        Serial.print("-");
-        Serial.print(myRTC.getMonth(century), DEC);
-        Serial.print("-");
-        Serial.print(myRTC.getDate(), DEC);
-        Serial.print(" ");
-        Serial.print(myRTC.getHour(h12Flag, pmFlag), DEC); //24-hr
-        Serial.print(":");
-        Serial.print(myRTC.getMinute(), DEC);
-        Serial.print(":");
-        Serial.println(myRTC.getSecond(), DEC);
-    }
-
-    // Notify that we are ready for the next input
-    Serial.println("Please enter the current time to set on DS3231 ended by 'x':");
-  }
-  delay(1000);
+      // Notify that we are ready for the next input
+      Serial.println("Please enter the current time to set on DS3231 ended by 'x':");
+   }
+   delay(1000);
 }
 
 /*****************************************************************************************************
@@ -112,28 +113,28 @@ void loop() {
  *  - Store the data in global variables
  *****************************************************************************************************/
 void inputDateFromSerial() {
-	// Call this if you notice something coming in on
-	// the serial port. The stuff coming in should be in
-	// the order YYMMDDwHHMMSS, with an 'x' at the end.
-	boolean isStrComplete = false;
-	char inputChar;
-	byte temp1, temp2;
-	char inputStr[20];
+   // Call this if you notice something coming in on
+   // the serial port. The stuff coming in should be in
+   // the order YYMMDDwHHMMSS, with an 'x' at the end.
+   boolean isStrComplete = false;
+   char inputChar;
+   byte temp1, temp2;
+   char inputStr[20];
 
-	uint8_t currentPos = 0;
-	while (!isStrComplete) {
-		if (Serial.available()) {
-			inputChar = Serial.read();
-			inputStr[currentPos] = inputChar;
-			currentPos += 1;
+   uint8_t currentPos = 0;
+   while (!isStrComplete) {
+      if (Serial.available()) {
+         inputChar = Serial.read();
+         inputStr[currentPos] = inputChar;
+         currentPos += 1;
 
       // Check if string complete (end with "x")
-			if (inputChar == 'x') {
-				isStrComplete = true;
-			}
-		}
-	}
-	Serial.println(inputStr);
+         if (inputChar == 'x') {
+            isStrComplete = true;
+         }
+      }
+   }
+   Serial.println(inputStr);
 
   // Find the end of char "x"
   int posX = -1;
@@ -147,36 +148,36 @@ void inputDateFromSerial() {
   // Consider 0 character in ASCII
   uint8_t zeroAscii = '0';
 
-	// Read Year first
-	temp1 = (byte)inputStr[posX - 13] - zeroAscii;
-	temp2 = (byte)inputStr[posX - 12] - zeroAscii;
-	year = temp1 * 10 + temp2;
+   // Read Year first
+   temp1 = (byte)inputStr[posX - 13] - zeroAscii;
+   temp2 = (byte)inputStr[posX - 12] - zeroAscii;
+   year = temp1 * 10 + temp2;
 
-	// now month
-	temp1 = (byte)inputStr[posX - 11] - zeroAscii;
-	temp2 = (byte)inputStr[posX - 10] - zeroAscii;
-	month = temp1 * 10 + temp2;
+   // now month
+   temp1 = (byte)inputStr[posX - 11] - zeroAscii;
+   temp2 = (byte)inputStr[posX - 10] - zeroAscii;
+   month = temp1 * 10 + temp2;
 
-	// now date
-	temp1 = (byte)inputStr[posX - 9] - zeroAscii;
-	temp2 = (byte)inputStr[posX - 8] - zeroAscii;
-	date = temp1 * 10 + temp2;
+   // now date
+   temp1 = (byte)inputStr[posX - 9] - zeroAscii;
+   temp2 = (byte)inputStr[posX - 8] - zeroAscii;
+   date = temp1 * 10 + temp2;
 
-	// now Day of Week
-	dow = (byte)inputStr[posX - 7] - zeroAscii;
+   // now Day of Week
+   dow = (byte)inputStr[posX - 7] - zeroAscii;
 
-	// now Hour
-	temp1 = (byte)inputStr[posX - 6] - zeroAscii;
-	temp2 = (byte)inputStr[posX - 5] - zeroAscii;
-	hour = temp1 * 10 + temp2;
+   // now Hour
+   temp1 = (byte)inputStr[posX - 6] - zeroAscii;
+   temp2 = (byte)inputStr[posX - 5] - zeroAscii;
+   hour = temp1 * 10 + temp2;
 
-	// now Minute
-	temp1 = (byte)inputStr[posX - 4] - zeroAscii;
-	temp2 = (byte)inputStr[posX - 3] - zeroAscii;
-	minute = temp1 * 10 + temp2;
+   // now Minute
+   temp1 = (byte)inputStr[posX - 4] - zeroAscii;
+   temp2 = (byte)inputStr[posX - 3] - zeroAscii;
+   minute = temp1 * 10 + temp2;
 
-	// now Second
-	temp1 = (byte)inputStr[posX - 2] - zeroAscii;
-	temp2 = (byte)inputStr[posX - 1] - zeroAscii;
-	second = temp1 * 10 + temp2;
+   // now Second
+   temp1 = (byte)inputStr[posX - 2] - zeroAscii;
+   temp2 = (byte)inputStr[posX - 1] - zeroAscii;
+   second = temp1 * 10 + temp2;
 }
