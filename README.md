@@ -1,6 +1,7 @@
 # DS3231-RTC Library
 [![Spell Check](https://github.com/hasenradball/DS3231-RTC/actions/workflows/spell_checker.yml/badge.svg)](https://github.com/hasenradball/DS3231-RTC/actions/workflows/spell_checker.yml)
 [![Compile Examples](https://github.com/hasenradball/DS3231-RTC/actions/workflows/compile_examples.yml/badge.svg)](https://github.com/hasenradball/DS3231-RTC/actions/workflows/compile_examples.yml)
+[![Unit Tests](https://github.com/hasenradball/DS3231-RTC/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/hasenradball/DS3231-RTC/actions/workflows/unit_tests.yml)
 
 The **great** C++ Library for the DS3231 real-time clock (RTC) module.  
 
@@ -17,17 +18,25 @@ This document explains the installation and usage of the Library with the Arduin
 You do have to install the Library in your Arduino IDE environment before you can use it. Installation instructions are provided, below.
 
 **REMARK**:<br>
-This library was based on the master branch of [NorthernWidget/DS3231](https://github.com/NorthernWidget/DS3231) Library in Oct/2023. It was reworked and refractured with respect of the following main topics:
+This library was based on the master branch of [NorthernWidget/DS3231](https://github.com/NorthernWidget/DS3231) Library in Oct/2023. It was maintained, reworked and refractured with respect of the following main topics:
 * using standardized functions of the `time.h` library.
 * introduce a `struct tm` which holds all relevant date and time values.
 * restructure comments, so that syntax highlighting works fine.
 * add a `strf_DateTime()` function with can be used to print a user specific(self defined) DateTime string easily.
+* restructure of code with respect of clean code
+* usage of Doxygen Documentation generation
+* introduce Google Unit Testing
+
 
 ## Contents
 
-* [Summary](#summary)
+* [Summary and How to Start](#summary-and-how-to-start)
+   * [Get Datetime from DS3231](#setup-and-get-datetime-from-ds3231)
+   * [Set the DS3231 Module with Date and Time](#setup-and-set-the-date-and-time-in-the-ds3231-module)
+   * [Use Date and Time](#use-date-and-time)
 * [About the DS3231](#about-the-ds3231-module)
     * [The DS3231 Battery Problem](#the-ds3231-battery-problem)
+* [Unit Testing](#unit-tests)
 * [How to Install the Library](#installation)
 * [Functions Provided in the Library](#functions)
 * [Examples of Using the Library](#examples-of-use)
@@ -35,52 +44,86 @@ This library was based on the master branch of [NorthernWidget/DS3231](https://g
 * [Contributing, Credits and License](#contributing)
 * [To-Do List](#to-do)
 
-
 <hr>
 
-## Summary
+## Summary and How to Start
 
-After installing the Library in your Arduino IDE, using it in a program starts with three, simple steps:
-
-<ol start="1"> 
-  <li>Import the Library into the program code:</li>
-</ol>
-
+### Setup and get DateTime from DS3231
+After installing the Library in your Arduino IDE, you can retrieve a DateTime from the DS3231 via:
 
 ```
+#include <Arduino.h>
+#include <Wire.h>
 #include <DS3231-RTC.h>
+
+DS3231::RTClib myRTC;
+
+void setup () {
+   Serial.begin(57600);
+   Wire.begin();
+   delay(500);
+   Serial.println("Nano Ready!");
+}
+
+void loop () {
+
+   delay(1000);
+
+   // get each second a timestamp
+   DS3231::DateTime now = myRTC.now();
+
+   Serial.print(now.getYear(), DEC);
+   Serial.print('/');
+   Serial.print(now.getMonth(), DEC);
+   Serial.print('/');
+   Serial.print(now.getDay(), DEC);
+   Serial.print(' ');
+   Serial.print(now.getHour(), DEC);
+   Serial.print(':');
+   Serial.print(now.getMinute(), DEC);
+   Serial.print(':');
+   Serial.print(now.getSecond(), DEC);
+   Serial.println();
+
+   Serial.print(" since midnight 1/1/1970 = ");
+   Serial.print(now.getUnixTime());
+   Serial.print("s = ");
+   Serial.print(now.getUnixTime() / 86400L);
+   Serial.println("d");
+}
 ```
 
-<ol start="2">
-  <li>Declare a DS3231 object, for example:</li>
-</ol>
-
-
-```
-DS3231 myRTC;
-```
-
-<ol start="3">
-  <li>Start the Wire library to enable I2C communications with the DS3231 hardware, typically in the setup() code block:</li>
-</ol>
-
-
-```
-Wire.begin();
-```
-or for the **ESP8266** like:
+or Serial for the **ESP8266** like:
 ```
 Wire.begin(SDA, SCL);
 ```
 
-Then, Library functions are typically accessed through the DS3231 object.
-
-For example, to read the current date of the month (1...31), depending on the month and the year:
+### Setup and set the Date and Time in the DS3231 module
+The feed the DS3231 Module the easiest way is to set th Epoch (unix timestamp).
 
 ```
-byte theDate = myRTC.getDate();
+#include <Arduino.h>
+#include <Wire.h>
+#include <DS3231-RTC.h>
+
+// unix timestamp of: Tue Aug 16 2022 10:00:00 GMT+0000
+constexpr time_t timestamp{1660644000UL};
+
+DS3231::RTClib myRTC;
+DS3231::DS3231 Clock;
+
+void setup() {
+   Serial.begin(115200);
+   Wire.begin();
+   Clock.begin();
+   delay(500);
+
+   // feed UnixTimeStamp
+   Clock.setEpoch(timestamp);
+}
 ```
 
+### Use Date and Time 
 The Library incorporates two other classes to assist with managing `date` and `time` data:
 
 * `DateTime` class enables a object for managing date and time data.
@@ -92,7 +135,7 @@ The `DateTime` class can be instantiated by a specific date and time in three di
 year, month, day, hour, minute and second
 
     or
-    
+
 * 2.) by a single, `time_t` unix timestamp.<br>
 
 * 3.) by giving a separate `const char *` string for Date and Time like:<br>
@@ -158,7 +201,126 @@ See the corresponding link for the problem description in detail:<br>
 [back to top](#ds3231-rtc-library)
 <hr>
 
+## Unit Tests
+The project contains unit tests.
+These tests validate:
 
+* some helper functions
+* getter functions
+
+### Run tests locally
+The tests are based on GoogleTest and are built with CMake.
+
+Required tools:
+
+* CMake
+* a C++17 compatible compiler
+
+#### Windows
+With Visual Studio or Visual Studio Build Tools installed, run the commands in a Developer PowerShell:
+
+```powershell
+# Generate Build System
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+# Build a Project
+cmake --build build
+# Execute Tests
+ctest --test-dir build --output-on-failure
+or 
+./build/test/test_DS3231 --gtest_color=yes
+```
+
+#### Linux
+Install CMake and a compiler toolchain, for example `g++` or `clang++`, and run:
+
+```bash
+# Generate Build System
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+# Build a Project
+cmake --build build
+# Execute Tests
+ctest --test-dir build --output-on-failure
+./build/test/test_DS3231 --gtest_color=yes
+```
+
+#### macOS
+Install Xcode Command Line Tools and CMake, then run:
+
+```bash
+# Generate Build System
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+# Build a Project
+cmake --build build
+# Execute Tests
+ctest --test-dir build --output-on-failure
+./build/test/test_DS3231 --gtest_color=yes
+```
+
+Example Output:
+```
+[==========] Running 23 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 8 tests from DS3231Tools_BCD
+[ RUN      ] DS3231Tools_BCD.BinaryDecodedDecimalToDecimal_0
+[       OK ] DS3231Tools_BCD.BinaryDecodedDecimalToDecimal_0 (0 ms)
+[ RUN      ] DS3231Tools_BCD.BinaryDecodedDecimalToDecimal_9
+[       OK ] DS3231Tools_BCD.BinaryDecodedDecimalToDecimal_9 (0 ms)
+[ RUN      ] DS3231Tools_BCD.BinaryDecodedDecimalToDecimal_10
+[       OK ] DS3231Tools_BCD.BinaryDecodedDecimalToDecimal_10 (0 ms)
+[ RUN      ] DS3231Tools_BCD.BinaryDecodedDecimalToDecimal_59
+[       OK ] DS3231Tools_BCD.BinaryDecodedDecimalToDecimal_59 (0 ms)
+[ RUN      ] DS3231Tools_BCD.DecimalToBinaryDecodedDecimal_0
+[       OK ] DS3231Tools_BCD.DecimalToBinaryDecodedDecimal_0 (0 ms)
+[ RUN      ] DS3231Tools_BCD.DecimalToBinaryDecodedDecimal_9
+[       OK ] DS3231Tools_BCD.DecimalToBinaryDecodedDecimal_9 (0 ms)
+[ RUN      ] DS3231Tools_BCD.DecimalToBinaryDecodedDecimal_10
+[       OK ] DS3231Tools_BCD.DecimalToBinaryDecodedDecimal_10 (0 ms)
+[ RUN      ] DS3231Tools_BCD.DecimalToBinaryDecodedDecimal_59
+[       OK ] DS3231Tools_BCD.DecimalToBinaryDecodedDecimal_59 (0 ms)
+[----------] 8 tests from DS3231Tools_BCD (0 ms total)
+
+[----------] 7 tests from DS3231Tools_leapYear
+[ RUN      ] DS3231Tools_leapYear.IsLeapYear_2023
+[       OK ] DS3231Tools_leapYear.IsLeapYear_2023 (0 ms)
+[ RUN      ] DS3231Tools_leapYear.IsLeapYear_2024
+[       OK ] DS3231Tools_leapYear.IsLeapYear_2024 (0 ms)
+[ RUN      ] DS3231Tools_leapYear.IsLeapYear_2032
+[       OK ] DS3231Tools_leapYear.IsLeapYear_2032 (0 ms)
+[ RUN      ] DS3231Tools_leapYear.IsLeapYear_1700
+[       OK ] DS3231Tools_leapYear.IsLeapYear_1700 (0 ms)
+[ RUN      ] DS3231Tools_leapYear.IsLeapYear_1800
+[       OK ] DS3231Tools_leapYear.IsLeapYear_1800 (0 ms)
+[ RUN      ] DS3231Tools_leapYear.IsLeapYear_1900
+[       OK ] DS3231Tools_leapYear.IsLeapYear_1900 (0 ms)
+[ RUN      ] DS3231Tools_leapYear.IsLeapYear_2000
+[       OK ] DS3231Tools_leapYear.IsLeapYear_2000 (0 ms)
+[----------] 7 tests from DS3231Tools_leapYear (0 ms total)
+
+[----------] 8 tests from DS3231MockTest
+[ RUN      ] DS3231MockTest.GetSecondReadsSecondRegister
+[       OK ] DS3231MockTest.GetSecondReadsSecondRegister (0 ms)
+[ RUN      ] DS3231MockTest.GetMinuteReadsMinuteRegister
+[       OK ] DS3231MockTest.GetMinuteReadsMinuteRegister (0 ms)
+[ RUN      ] DS3231MockTest.GetHourReadsFlagsAndBcdValue
+[       OK ] DS3231MockTest.GetHourReadsFlagsAndBcdValue (0 ms)
+[ RUN      ] DS3231MockTest.SetHourWritesUpdatedHourRegister
+[       OK ] DS3231MockTest.SetHourWritesUpdatedHourRegister (0 ms)
+[ RUN      ] DS3231MockTest.GetDoWReadsDoWRegister
+[       OK ] DS3231MockTest.GetDoWReadsDoWRegister (0 ms)
+[ RUN      ] DS3231MockTest.GetDayReadsDateRegister
+[       OK ] DS3231MockTest.GetDayReadsDateRegister (0 ms)
+[ RUN      ] DS3231MockTest.GetMonthReadsMonthRegister
+[       OK ] DS3231MockTest.GetMonthReadsMonthRegister (0 ms)
+[ RUN      ] DS3231MockTest.GetYearReadsYearRegister
+[       OK ] DS3231MockTest.GetYearReadsYearRegister (0 ms)
+[----------] 8 tests from DS3231MockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 23 tests from 3 test suites ran. (1 ms total)
+[  PASSED  ] 23 tests.
+```
+
+[back to top](#ds3231-rtc-library)
 ## Installation
 
 ### First Method
@@ -324,6 +486,8 @@ See also [Working with the DS3231 libraries and interrupts](https://github.com/I
 [back to top](#ds3231-rtc-library)
 <hr>
 
+
+
 ## Contributing
 
 If you want to contribute to this project:
@@ -353,7 +517,7 @@ Based on previous work by:
 
 ## License
 
-DS3231 is licensed under [MIT License](https://github.com/hasenradball/DS3231-RTC/blob/master/LICENSE).
+DS3231-RTC is licensed under [MIT License](https://github.com/hasenradball/DS3231-RTC/blob/master/LICENSE).
 
 [back to top](#ds3231-rtc-library)
 <hr>

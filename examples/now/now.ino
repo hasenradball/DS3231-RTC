@@ -6,37 +6,37 @@
 #include <Wire.h>
 #include <DS3231-RTC.h>
 
-RTClib myRTC;
+DS3231::RTClib myRTC;
 
 void setup () {
-    Serial.begin(57600);
-    Wire.begin();
-    delay(500);
-    Serial.println("Nano Ready!");
+   Serial.begin(57600);
+   Wire.begin();
+   delay(500);
+   Serial.println("Nano Ready!");
 }
 
 void loop () {
-    
-    delay(1000);
-    
-    DateTime now = myRTC.now();
-    
-    Serial.print(now.getYear(), DEC);
-    Serial.print('/');
-    Serial.print(now.getMonth(), DEC);
-    Serial.print('/');
-    Serial.print(now.getDay(), DEC);
-    Serial.print(' ');
-    Serial.print(now.getHour(), DEC);
-    Serial.print(':');
-    Serial.print(now.getMinute(), DEC);
-    Serial.print(':');
-    Serial.print(now.getSecond(), DEC);
-    Serial.println();
-    
-    Serial.print(" since midnight 1/1/1970 = ");
-    Serial.print(now.getUnixTime());
-    Serial.print("s = ");
-    Serial.print(now.getUnixTime() / 86400L);
-    Serial.println("d");
+
+   delay(1000);
+
+   DS3231::DateTime now = myRTC.now();
+
+   Serial.print(now.getYear(), DEC);
+   Serial.print('/');
+   Serial.print(now.getMonth(), DEC);
+   Serial.print('/');
+   Serial.print(now.getDay(), DEC);
+   Serial.print(' ');
+   Serial.print(now.getHour(), DEC);
+   Serial.print(':');
+   Serial.print(now.getMinute(), DEC);
+   Serial.print(':');
+   Serial.print(now.getSecond(), DEC);
+   Serial.println();
+
+   Serial.print(" since midnight 1/1/1970 = ");
+   Serial.print(now.getUnixTime());
+   Serial.print("s = ");
+   Serial.print(now.getUnixTime() / 86400L);
+   Serial.println("d");
 }

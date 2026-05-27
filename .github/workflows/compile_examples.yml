@@ -7,10 +7,22 @@ on:
 jobs:
   compile-examples:
     runs-on: ubuntu-latest
-
+    
+    strategy:
+      fail-fast: false
+      
+      matrix:
+        board:
+          - fqbn: arduino:avr:uno
+          - fqbn: arduino:avr:nano
+    
     steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v6
         - uses: arduino/compile-sketches@v1
           with:
+            fqbn: ${{ matrix.board.fqbn }}
+            cli-compile-flags: |
+              - --build-property
+              - compiler.cpp.extra_flags=-std=gnu++17
             libraries: |
-              - source-path: ./
+              - source-path: .

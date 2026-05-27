@@ -24,14 +24,12 @@ Tested on:
 #include <Wire.h>
 #include <DS3231-RTC.h>
 
+
 // Interrupt frequency, in seconds
-#define INT_FREQ 3UL // 3 seconds, characterized as unsigned long
+constexpr uint8_t INTERRUPT_FREQUENCY {3U};
+constexpr int  RTC_INTERUPT_PIN {2};
 
-// myRTC interrupt pin
-#define CLINT 2
-
-// Setup clock
-DS3231 myRTC;
+DS3231::DS3231 myRTC;
 
 // Variables for use in method parameter lists
 byte alarmDay;
@@ -46,122 +44,121 @@ bool alarmPM;
 // Interrupt signaling byte
 volatile byte tick = 1;
 
+void isr_TickTock() {
+   // interrupt signals to loop
+   tick = 1;
+   return;
+}
 
 void setup() {
-    // Begin I2C communication
-    Wire.begin();
+   // Begin I2C communication
+   Wire.begin();
 
-    // Begin Serial communication
-    Serial.begin(9600);
-    while (!Serial);
+   // Begin Serial communication
+   Serial.begin(9600);
+   while (!Serial);
 
-    // Set the DS3231 clock mode to 24-hour
-    myRTC.setClockMode(false); // false = not using the alternate, 12-hour mode
+   myRTC.begin();
 
-    // Set the clock to an arbitrarily chosen time of
-    // 00:00:00 midnight the morning of January 1, 2020
-    // using a suitable Unix-style timestamp
-    myRTC.setEpoch(1640995200);
+   // Set the clock to an arbitrarily chosen time of
+   // 00:00:00 midnight the morning of January 1, 2020
+   // using a suitable Unix-style timestamp
+   myRTC.setEpoch(1640995200);
 
-    // Assign parameter values for Alarm 1
-    alarmDay = myRTC.getDate();
-    alarmHour = myRTC.getHour(alarmH12, alarmPM);
-    alarmMinute = myRTC.getMinute();
-    alarmSecond = INT_FREQ; // initialize to the interval length
-    alarmBits = 0b00001110; // Alarm 1 when seconds match
-    alarmDayIsDay = false; // using date of month
+   // Assign parameter values for Alarm 1
+   alarmDay = myRTC.getDate();
+   alarmHour = myRTC.getHour(alarmH12, alarmPM);
+   alarmMinute = myRTC.getMinute();
+   alarmSecond = INTERRUPT_FREQUENCY; // initialize to the interval length
+   alarmBits = 0b00001110; // Alarm 1 when seconds match
+   alarmDayIsDay = false; // using date of month
 
-    // Upload initial parameters of Alarm 1
-    myRTC.turnOffAlarm(1);
-    myRTC.setA1Time(
-       alarmDay, alarmHour, alarmMinute, alarmSecond,
-       alarmBits, alarmDayIsDay, alarmH12, alarmPM);
-    // clear Alarm 1 flag after setting the alarm time
-    myRTC.checkIfAlarm(1);
-    // now it is safe to enable interrupt output
-    myRTC.turnOnAlarm(1);
+   // Upload initial parameters of Alarm 1
+   myRTC.turnOffAlarm(1);
+   myRTC.setA1Time(
+      alarmDay, alarmHour, alarmMinute, alarmSecond,
+      alarmBits, alarmDayIsDay, alarmH12, alarmPM);
+   // clear Alarm 1 flag after setting the alarm time
+   myRTC.checkIfAlarm(1);
+   // now it is safe to enable interrupt output
+   myRTC.turnOnAlarm(1);
 
-    // When using interrupt with only one of the DS3231 alarms, as in this example,
-    // it may be possible to prevent the other alarm entirely,
-    // so it will not covertly block the outgoing interrupt signal.
+   // When using interrupt with only one of the DS3231 alarms, as in this example,
+   // it may be possible to prevent the other alarm entirely,
+   // so it will not covertly block the outgoing interrupt signal.
 
-    // Try to prevent Alarm 2 altogether by assigning a 
-    // nonsensical alarm minute value that cannot match the clock time,
-    // and an alarmBits value to activate "when minutes match".
-    alarmMinute = 0xFF; // a value that will never match the time
-    alarmBits = 0b01100000; // Alarm 2 when minutes match, i.e., never
-    
-    // Upload the parameters to prevent Alarm 2 entirely
-    myRTC.setA2Time(
-        alarmDay, alarmHour, alarmMinute,
-        alarmBits, alarmDayIsDay, alarmH12, alarmPM);
-    // disable Alarm 2 interrupt
-    myRTC.turnOffAlarm(2);
-    // clear Alarm 2 flag
-    myRTC.checkIfAlarm(2);
+   // Try to prevent Alarm 2 altogether by assigning a 
+   // nonsensical alarm minute value that cannot match the clock time,
+   // and an alarmBits value to activate "when minutes match".
+   alarmMinute = 0xFF; // a value that will never match the time
+   alarmBits = 0b01100000; // Alarm 2 when minutes match, i.e., never
+   
+   // Upload the parameters to prevent Alarm 2 entirely
+   myRTC.setA2Time(
+      alarmDay, alarmHour, alarmMinute,
+      alarmBits, alarmDayIsDay, alarmH12, alarmPM);
+   // disable Alarm 2 interrupt
+   myRTC.turnOffAlarm(2);
+   // clear Alarm 2 flag
+   myRTC.checkIfAlarm(2);
 
-    // NOTE: both of the alarm flags must be clear
-    // to enable output of a FALLING interrupt
+   // NOTE: both of the alarm flags must be clear
+   // to enable output of a FALLING interrupt
 
-    // attach clock interrupt
-    pinMode(CLINT, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(CLINT), isr_TickTock, FALLING);
+   // attach clock interrupt
+   pinMode(RTC_INTERUPT_PIN, INPUT_PULLUP);
+   attachInterrupt(digitalPinToInterrupt(RTC_INTERUPT_PIN), isr_TickTock, FALLING);
 
-    // Configure the LED for blinking
-    pinMode(LED_BUILTIN, OUTPUT);
+   // Configure the LED for blinking
+   pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
-    // static variable to keep track of LED on/off state
-    static byte state = false;
+   // static variable to keep track of LED on/off state
+   static byte state = false;
 
-    // Do when alarm interrupt received:
-    if (tick) {
-        // right away, capture the current time in a DateTime variable
-        // for later processing
-        DateTime alarmDT = RTClib::now();
+   // Do when alarm interrupt received:
+   if (tick) {
+      // right away, capture the current time in a DateTime variable
+      // for later processing
+      DS3231::DateTime alarmDT = DS3231::RTClib::now();
 
-        // disable Alarm 1 interrupt
-        myRTC.turnOffAlarm(1);
-        
-        // Clear Alarm 1 flag
-        myRTC.checkIfAlarm(1);
-        
-        tick = 0; // reset the local interrupt-received flag
-        state = ~state; // reverse the state of the LED
-        digitalWrite(LED_BUILTIN, state);
+      // disable Alarm 1 interrupt
+      myRTC.turnOffAlarm(1);
+      
+      // Clear Alarm 1 flag
+      myRTC.checkIfAlarm(1);
+      
+      tick = 0; // reset the local interrupt-received flag
+      state = ~state; // reverse the state of the LED
+      digitalWrite(LED_BUILTIN, state);
 
-        // optional serial output
-        Serial.print("Turning LED ");
-        Serial.print((state ? "ON" : "OFF"));
-        Serial.print(" at ");
-        Serial.print(alarmDT.getHour());
-        Serial.print(":");
-        Serial.print(alarmDT.getMinute());
-        Serial.print(":");
-        Serial.println(alarmDT.getSecond());
+      // optional serial output
+      Serial.print("Turning LED ");
+      Serial.print((state ? "ON" : "OFF"));
+      Serial.print(" at ");
+      Serial.print(alarmDT.getHour());
+      Serial.print(":");
+      Serial.print(alarmDT.getMinute());
+      Serial.print(":");
+      Serial.println(alarmDT.getSecond());
 
-        // extract the DateTime values as a timestamp 
-        uint32_t nextAlarm = alarmDT.getUnixTime();
-        // add the INT_FREQ number of seconds
-        nextAlarm += INT_FREQ;
-        // update the DateTime with the new timestamp
-        alarmDT = DateTime(nextAlarm);
+      // extract the DateTime values as a timestamp 
+      uint32_t nextAlarm = alarmDT.getUnixTime();
+      nextAlarm += INTERRUPT_FREQUENCY;
+      // update the DateTime with the new timestamp
+      alarmDT = DS3231::DateTime(nextAlarm);
 
-        // upload the new time to Alarm 1
-       myRTC.setA1Time(
-         alarmDT.getDay(), alarmDT.getHour(), alarmDT.getMinute(), alarmDT.getSecond(),
-       alarmBits, alarmDayIsDay, alarmH12, alarmPM);
-       
-       // enable Alarm 1 interrupts
-       myRTC.turnOnAlarm(1);
+      // upload the new time to Alarm 1
+      myRTC.setA1Time(
+      alarmDT.getDay(), alarmDT.getHour(), alarmDT.getMinute(), alarmDT.getSecond(),
+      alarmBits, alarmDayIsDay, alarmH12, alarmPM);
+
+      // enable Alarm 1 interrupts
+      myRTC.turnOnAlarm(1);
       // clear Alarm 1 flag again after enabling interrupts
-        myRTC.checkIfAlarm(1);
-    }
+      myRTC.checkIfAlarm(1);
+   }
 }
 
-void isr_TickTock() {
-    // interrupt signals to loop
-    tick = 1;
-    return;
-}
+

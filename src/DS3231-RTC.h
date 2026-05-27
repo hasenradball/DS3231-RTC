@@ -1,256 +1,697 @@
-/*
- * DS3231-RTC.h
- *
- * The great C++ Library for the DS3231 Real-Time Clock chip
- *
+/**
+ * @file    DS3231-RTC.h
+ * @author  Frank Häfele
+ * @brief   Real-Time clock library based on Arduino Framework
  */
 
-#ifndef __DS3231_RTC_H__
-#define __DS3231_RTC_H__
+#pragma once
 
+#if __has_include(<Arduino.h>)
 #include <Arduino.h>
-#include <time.h>
+#else
+#include <cstddef>
+#include <cstdint>
+#endif
+
+#if __has_include(<Wire.h>)
 #include <Wire.h>
-
-#define CLOCK_ADDRESS 0x68
-
-#if !defined (UNIX_OFFSET)
-// SECONDS_FROM_1970_TO_2000
-// Difference between the Y2K and the UNIX epochs, in seconds.
-// To convert a Y2K timestamp to UNIX... 
-#define UNIX_OFFSET 946684800UL
+#define DS3231_RTC_HAS_WIRE 1
+#else
+#define DS3231_RTC_HAS_WIRE 0
 #endif
 
-#if !defined (NTP_OFFSET)
-// SECONDS_FROM_1900_TO_2000
-// Difference between the Y2K and the NTP epochs, in seconds.
-// To convert a Y2K timestamp to NTP... 
-#define NTP_OFFSET 3155673600UL
+#include <time.h>
+#include "DS3231-RTC_Tools.h"
+#include "DS3231-RTC_Constants.h"
+
+namespace DS3231 {
+   class BusInterface {
+      public:
+         virtual ~BusInterface() = default;
+         virtual void beginTransmission(uint8_t address) = 0;
+         virtual size_t write(uint8_t value) = 0;
+         virtual uint8_t endTransmission() = 0;
+         virtual uint8_t requestFrom(uint8_t address, uint8_t quantity) = 0;
+         virtual int read() = 0;
+         virtual int available() = 0;
+   };
+
+#if DS3231_RTC_HAS_WIRE
+   class TwoWireAdapter : public BusInterface {
+      public:
+         explicit TwoWireAdapter(TwoWire *wire = nullptr);
+
+         void beginTransmission(uint8_t address) override;
+         size_t write(uint8_t value) override;
+         uint8_t endTransmission() override;
+         uint8_t requestFrom(uint8_t address, uint8_t quantity) override;
+         int read() override;
+         int available() override;
+         void begin();
+
+      private:
+         TwoWire *_wire;
+   };
 #endif
 
-// DateTime class restructured by using standardized time functions
-class DateTime {
-    public:
-        DateTime (time_t unix_timestamp = 0);
+#pragma region DateTime
+   class DateTime {
+      public:
+         /**
+         * @brief Construct a new Date Time:: Date Time object
+         * 
+         * @param unix_timestamp for setup the date time members
+         */
+         DateTime (time_t unix_timestamp = 0);
 
-	    DateTime ( 	int16_t year, int8_t month, int8_t mday,
-                    int8_t hour = 0, int8_t min = 0, int8_t sec = 0,
-                    int8_t wday = 0, int16_t yday = 0, int16_t dst = -1);
-    
-        DateTime (const char *date, const char *time);
-        
-        int16_t getYear()   const	{ return _tm.tm_year + 1900; }
-        int8_t getMonth()   const   { return _tm.tm_mon + 1; }
-        int8_t getDay()     const   { return _tm.tm_mday; }
-        int8_t getHour()    const   { return _tm.tm_hour; }
-        int8_t getMinute()  const   { return _tm.tm_min; }
-        int8_t getSecond()  const   { return _tm.tm_sec; }
-        int8_t getWeekDay() const	{ return _tm.tm_wday; }
-        int16_t getYearDay() const	{ return _tm.tm_yday; }
-        int16_t getDST()    const   { return _tm.tm_isdst; }
-        size_t strf_DateTime(char *buffer, size_t buffersize, const char *formatSpec = "%a %h %d %T %Y");
+         /**
+         * @brief Construct a new Date Time object
+         * 
+         * @param year year YYYY as e.g. 2022
+         * @param month months since January - [ 1...12 ]
+         * @param mday day of the month - [ 1...31 ]
+         * @param hour hours since midnight - [ 0...23 ]
+         * @param min minutes after the hour - [ 0...59 ]
+         * @param sec seconds after the minute - [ 0...59 ]
+         * @param wday weekday since Sunday, Sunday is 1 - [ 1...7 ]
+         * @param yday yearday since first january [0...365]
+         * @param dst daylight saving time / summer time
+         */
+         DateTime (int16_t year, int8_t month, int8_t mday,
+                  int8_t hour = 0, int8_t min = 0, int8_t sec = 0,
+                  int8_t wday = 0, int16_t yday = 0, int16_t dst = -1);
 
-        // time_t value as seconds since 1/1/2000
-        time_t getY2kTime() const { return _y2k_timestamp; }
-        
-        // time_t value as seconds since 1/1/1970
-        // THE ABOVE COMMENT IS CORRECT FOR LOCAL TIME; TO USE THIS COMMAND TO
-        // OBTAIN TRUE UNIX TIME SINCE EPOCH, YOU MUST CALL THIS COMMAND AFTER
-        // SETTING YOUR CLOCK TO UTC
-        time_t getUnixTime() const  { return _unix_timestamp; }
-    
-    private:
-        void set_timstamps();
+         /**
+         * @brief Construct a new Date Time:: Date Time object by givin the precompiler marcos
+         * as __DATE__ and __TIME__
+         * 
+         * @param date as  Mmm dd yyyy (e.g. "Jan 14 2012")
+         * @param time as HH:MM:SS (e.g. "23:59:01")
+         */
+         DateTime (const char *date, const char *time);
+         
+         /**
+         * @brief Get the Year value
+         * 
+         * @return int16_t year as YYYY e.g. 2022
+         */
+         inline int16_t getYear() const { return _tm.tm_year + 1900; }
 
-    protected:
-        time_t _unix_timestamp;
-        time_t _y2k_timestamp;
-        struct tm _tm;
-};
+         /**
+         * @brief Get the Month value
+         * 
+         * @return int8_t month 1...12
+         */
+         int8_t getMonth() const { return _tm.tm_mon + 1; }
 
-class RTClib {
-    public:
-        // Get date and time snapshot
-        static DateTime now(TwoWire &_Wire = Wire);
-};
+         /**
+         * @brief Get the Day value
+         * 
+         * @return int8_t day 1...31
+         */
+         int8_t getDay() const { return _tm.tm_mday; }
 
-// Eric's original code is everything below this line
-class DS3231 {
-    public:
-        // Constructor
-        DS3231();
-        DS3231(TwoWire &twowire);
-        
-        TwoWire &_Wire;
+         /**
+         * @brief Get the Hour value
+         * 
+         * @return int8_t hour as 0...23 
+         */
+         int8_t getHour() const { return _tm.tm_hour; }
 
-        // ************************************
-        //      Time-retrieval functions
-        // ************************************
-        // Get the second of the DS3231 module
-        byte getSecond();
-        // Get the minute of the DS3231 module
-        byte getMinute();
+         /**
+         * @brief Get the Minute value
+         * 
+         * @return int8_t minute as 0...59
+         */
+         int8_t getMinute()  const   { return _tm.tm_min; }
 
-        // Get the hour of the DS3231 module, in addition, this function
-        // returns the values of the 12/24-hour flag and the AM/PM flag.
-        byte getHour(bool& h12, bool& PM_time);
+         /**
+         * @brief Get the Second value
+         * 
+         * @return int8_t second as 0...60
+         */
+         int8_t getSecond() const { return _tm.tm_sec; }
 
-        // Get the DayOfWeek of the DS3231 module   
-        byte getDoW();
+         /**
+         * @brief Get the Week Day value
+         * 
+         * @return int8_t days since sunday
+         */
+         int8_t getWeekDay() const { return _tm.tm_wday; }
 
-        // Get the date of the DS3231 module
-        byte getDate();
+         /**
+         * @brief Get the Year Day value
+         * 
+         * @return int16_t days since January 1 as 0...365
+         */
+         int16_t getYearDay() const	{ return _tm.tm_yday; }
 
-        // Get the month and the century roll over of the DS3231 module
-        byte getMonth(bool &century);
-            
-        // Get the year of the DS3231 module
-        byte getYear();
-            
+         /**
+         * @brief get daylight saving time
+         * 
+         * @retval >0: DST is active
+         * @retval  0: DST is not active
+         * @retval <0: no info avalilable
+         */
+         int16_t getDST()    const   { return _tm.tm_isdst; }
 
-        // ************************************
-        //        Time-setting functions
-        // ************************************
-        // Note that none of these check for sensibility: You can set the
-        // date to July 42nd and strange things will probably result.
+         /**
+         * @brief function to format a DateTime string in an buffer based on the standard strftime function
+         * 
+         *  see: https://cplusplus.com/reference/ctime/strftime/ 
+         *  or:  https://en.cppreference.com/w/cpp/chrono/c/strftime
+         * 
+         * @param buffer buffer for time string 
+         * @param buffersize size of buffer
+         * @param formatSpec define format see strftime
+         * @return size_t length of used buffer
+         */
+         size_t strf_DateTime(char *buffer, size_t buffersize, const char *formatSpec = "%a %h %d %T %Y");
 
-        // set epoch function gives the epoch as parameter and feeds the RTC
-        // epoch = UnixTime and starts at 01.01.1970 00:00:00
-        void setEpoch(time_t epoch = 0, bool flag_localtime = false);
+         /**
+         * @brief time_t value as seconds from 1/1/2000 to now. 
+         * Difference between the Y2K and the UNIX epochs, in seconds
+         * 
+         * @return time_t seconds from 1/1/2000 to now
+         * 
+         */
+         time_t getY2kTime() const { return _y2k_timestamp; }
 
-        // Set the Second of the DS3231 module
-        void setSecond(byte second);
-        // Set the minute of the DS3231 module
-        void setMinute(byte minute);
-        // Set the hour of the DS3231 module
-        void setHour(byte hour);
-        // Sets the Day of the Week (1...7) of the DS3231 module
-        void setDoW(byte dayOfWeek);
-        // Sets the Date of the DS3231 module
-        void setDate(byte date);
+         /**
+         * @brief Get the Unix Time value. AKA EPOCH.
+         * THE ABOVE COMMENT IS CORRECT FOR LOCAL TIME; TO USE THIS COMMAND TO
+         * OBTAIN TRUE UNIX TIME SINCE EPOCH, YOU MUST CALL THIS COMMAND AFTER
+         * SETTING YOUR CLOCK TO UTC
+         * 
+         * @return time_t epoch since 1/1/1970
+         */
+         time_t getUnixTime() const  { return _unix_timestamp; }
+      
+      private:
+         /**
+         * @brief Set the timestamps for _y2k_timestamp and _unix_timestamp by struct tm entries
+         * 
+         */
+         void set_timstamps();
+
+      protected:
+         /**
+         * @brief internal unix timestamp from 1/1/1970 to now
+         * 
+         */
+         time_t _unix_timestamp;
+
+         /**
+         * @brief internal y2k timestamp from 1/1/2000 to now
+         * 
+         */
+         time_t _y2k_timestamp;
+
+         /**
+         * @brief internal struct tm
+         * 
+         */
+         struct tm _tm;
+   };
+#pragma endregion DateTime
+
+   class RTClib {
+      public:
+         /**
+            * @brief get the actual timestamp snapshot
+            * 
+            * @param bus 
+            * @return DateTime 
+            */
+         static DateTime now(BusInterface &bus);
+
+#if DS3231_RTC_HAS_WIRE
+         static DateTime now(TwoWire &_Wire = Wire);
+#endif
+   };
+
+#pragma region DS3231
+   class DS3231 {
+      public:
+#if DS3231_RTC_HAS_WIRE
+         /**
+         * @brief Construct a new DS3231::DS3231 object
+         * initialize the internal _Wire with the Wire object
+         */
+         DS3231();
+
+         /**
+         * @brief Construct a new DS3231::DS3231 object
+         * 
+         * @param twowire reference of TwoWire object
+         */
+         DS3231(TwoWire &twowire);
+#endif
+
+         /**
+         * @brief Construct a new DS3231::DS3231 object with an injected bus
+         * 
+         * @param bus abstract bus implementation for production or tests
+         */
+         explicit DS3231(BusInterface &bus);
+
+         // ************************************
+         //      Time-retrieval functions
+         // ************************************
+         /**
+         * @brief Get the second of the DS3231 module
+         * 
+         * @return uint8_t 0...59
+         */
+         uint8_t getSecond();
+
+         /**
+         * @brief Get the minute of the DS3231 module
+         * 
+         * @return uint8_t 0...59
+         */
+         uint8_t getMinute();
+
+         // Get the hour of the DS3231 module, 
+         /**
+         * @brief Get the hour of the DS3231 module. in addition, this function
+         * returns the values of the 12/24-hour flag and the AM/PM flag.
+         * 
+         * @param h12 reference of h12 - true when 12 h mode
+         * @param PM_time reference of pm time - true when pm
+         * @return uint8_t 1...12 / 0...23
+         */
+         uint8_t getHour(bool& h12, bool& PM_time);
+
+         /**
+         * @brief Get the DayOfWeek of the DS3231 module
+         * 
+         * @return uint8_t 1...7
+         */
+         uint8_t getDoW();
+
+         /**
+         * @brief Get the date/day of the DS3231 module
+         * 
+         * @return uint8_t 1...31
+         */
+         uint8_t getDate();
+
+         /**
+         * @brief Get the month and the century roll over bit of the DS3231 module
+         * 
+         * @param century reference of century bit; toggles when value changes from 99 -> 00
+         * @return uint8_t value of month 1...12
+         */
+         uint8_t getMonth(bool &century);
+
+         /**
+         * @brief Get the Year of the DS3231 module
+         * 
+         * @return uint8_t 0...99
+         */
+         uint8_t getYear();
+
+
+         // ************************************
+         //        Time-setting functions
+         // ************************************
+         // Note that none of these check for sensibility: You can set the
+         // date to July 42nd and strange things will probably result.
+
+         // set epoch function gives the epoch as parameter and feeds the RTC
+         // epoch = UnixTime and starts at 01.01.1970 00:00:00
+
+         /**
+          * @brief Set the DS3231 by giving the Unix Epoch.
+          * Seconds since January 1st 1970 00:00:00. 
+          * HINT: => the AVR time.h lib is based on the year 2000
+          * 
+          * @param epoch seconds since 01.01.1970 00:00:00
+          * @param flag_localtime true if epoch represents local timestamp false otherwise
+          */
+         void setEpoch(time_t epoch = 0, bool flag_localtime = false);
+
+         /**
+         * @brief Set the second of the DS3231 module
+         * This function also resets the Oscillator Stop Flag, which is set
+         * whenever power is interrupted.
+         * @param second 0...59
+         */
+         void setSecond(uint8_t second);
+
+         /**
+          * @brief Set the Minute of the DS3231 module
+          * 
+          * @param minute 0...59
+          */
+         void setMinute(uint8_t minute);
+         
+         
+         /**
+          * @brief Sets the hour, without changing 12/24h mode.
+          * The hour must be in 24h format.
+          * 
+          * @param hour 0...23
+          */
+         void setHour(uint8_t hour);
+
+
+         /**
+          * @brief Sets the Day of Week of the DS3231 module
+          * 
+          * @param dayOfWeek 1...7
+          */
+         void setDoW(uint8_t dayOfWeek);
+
+         /**
+          * @brief Sets the Date/Day of the DS3231 module
+          * 
+          * @param date 1...31
+          */
+         void setDate(uint8_t date);
+         
          // Sets the Month of the DS3231 module
-        void setMonth(byte month);
-         // Sets the Year of the DS3231 module
-        void setYear(byte year);
-         // Sets the Hour format (12h/24h) of the DS3231 module
-        void setClockMode(bool h12);
+         /**
+          * @brief Sets the Month of the DS3231 module
+          * 
+          * @param month 1...12
+          */
+         void setMonth(uint8_t month);
+
+         /**
+          * @brief Sets the Year of the DS3231 module.
+          * 
+          * @param year 0...99
+          */
+         void setYear(uint8_t year);
+
+         /**
+          * @brief Sets the clock hour to 12h format of the DS3231 module
+          * 
+          */
+         void set12hourMode();
+
+         /**
+          * @brief Sets the clock hour to 24h format of the DS3231 module
+          * 
+          */
+         void set24hourMode();
+
+         /**
+          * @brief check if 24h hour mode is active
+          * 
+          * @return true if 24 h mode is set
+          * @return false if 12 hour mode is set
+          */
+         bool is24hourModeActive();
+         
+         /**
+          * @brief Initialize the DS3231 instance after I2C bus is ready.
+          * 
+          * This should be called after Wire.begin() when using the default
+          * TwoWire interface, and ensures the clock is placed in 24h mode.
+          */
+         void begin();
+         
+         // ************************************
+         //        Temperature Getter function
+         // ************************************
+         // get temperature of the DS3231 module
+         /**
+          * @brief read the internal temperature sensor of the DS3231 module
+          * 
+          * @return float temperature measured in DS3231 module
+          */
+         float getTemperature();
+
+         // ************************************
+         //        Alarm Getter functions
+         // ************************************
+         /* Retrieves everything you could want to know about alarm
+          * one.
+          * Dy true makes the alarm go on Day = Day of Week,
+          * Dy false makes the alarm go on Day = Date of month.
+          *
+          * uint8_t AlarmBits sets the behavior of the alarms:
+          *	Dy	A1M4	A1M3	A1M2	A1M1	Rate
+          *	X	1		1		1		1		Once per second
+          *	X	1		1		1		0		Alarm when seconds match
+          *	X	1		1		0		0		Alarm when min, sec match
+          *	X	1		0		0		0		Alarm when hour, min, sec match
+          *	0	0		0		0		0		Alarm when date, h, m, s match
+          *	1	0		0		0		0		Alarm when DoW, h, m, s match
+          *
+          *	Dy	A2M4	A2M3	A2M2	Rate
+          *	X	1		1		1		Once per minute (at seconds = 00)
+          *	X	1		1		0		Alarm when minutes match
+          *	X	1		0		0		Alarm when hours and minutes match
+          *	0	0		0		0		Alarm when date, hour, min match
+          *	1	0		0		0		Alarm when DoW, hour, min match
+          *
+          *	Note: uint8_t AlarmBits is not explicitly cleared for the getAXTime methods to
+          *	support sequential retrieval of both alarms with the same uint8_t AlarmBits.
+          *	Use the flag bool clearAlarmBits=True to explicitly clear uint8_t AlarmBits on
+          *  call to getAXTime.
+          */
+         
+         /**
+          * @brief get the time of alarm1
+          * 
+          * @param Day 
+          * @param Hour 
+          * @param Minute 
+          * @param Second 
+          * @param AlarmBits 
+          * @param Dy 
+          * @param h12 
+          * @param PM 
+          */
+         void getA1Time(uint8_t &Day, uint8_t &Hour, uint8_t &Minute, uint8_t &Second, uint8_t &AlarmBits, bool &Dy, bool &h12, bool &PM);
+
+         /**
+          * @brief getA1Time();, but A2 only goes on seconds == 00.
+          * 
+          * @param Day 
+          * @param Hour 
+          * @param Minute 
+          * @param AlarmBits 
+          * @param Dy 
+          * @param h12 
+          * @param PM 
+          */
+         void getA2Time(uint8_t &Day, uint8_t &Hour, uint8_t &Minute, uint8_t &AlarmBits, bool &Dy, bool &h12, bool &PM);
+         
+         /**
+          * @brief Same as getA1Time();, but clears uint8_t AlarmBits.
+          * 
+          * @param Day 
+          * @param Hour 
+          * @param Minute 
+          * @param Second 
+          * @param AlarmBits 
+          * @param Dy 
+          * @param h12 
+          * @param PM 
+          * @param clearAlarmBits 
+          */
+         void getA1Time(uint8_t &Day, uint8_t &Hour, uint8_t &Minute, uint8_t &Second, uint8_t &AlarmBits, bool &Dy, bool &h12, bool &PM, bool clearAlarmBits);
+
+         
+
+         /**
+          * @brief Same as getA1Time();, but clears uint8_t AlarmBits.
+          * 
+          * @param Day 
+          * @param Hour 
+          * @param Minute 
+          * @param AlarmBits 
+          * @param Dy 
+          * @param h12 
+          * @param PM 
+          * @param clearAlarmBits 
+          */
+         void getA2Time(uint8_t &Day, uint8_t &Hour, uint8_t &Minute, uint8_t &AlarmBits, bool &Dy, bool &h12, bool &PM, bool clearAlarmBits);
+         
+         /**
+          * @brief  Set the details for Alarm 1
+          * 
+          * @param Day 
+          * @param Hour 
+          * @param Minute 
+          * @param Second 
+          * @param AlarmBits 
+          * @param Dy 
+          * @param h12 
+          * @param PM 
+          */
+         void setA1Time(uint8_t Day, uint8_t Hour, uint8_t Minute, uint8_t Second, uint8_t AlarmBits, bool Dy, bool h12, bool PM);
+         
+         /**
+          * @brief Set the details for Alarm 2
+          * 
+          * @param Day 
+          * @param Hour 
+          * @param Minute 
+          * @param AlarmBits 
+          * @param Dy 
+          * @param h12 
+          * @param PM 
+          */
+         void setA2Time(uint8_t Day, uint8_t Hour, uint8_t Minute, uint8_t AlarmBits, bool Dy, bool h12, bool PM);
+         
+         /**
+          * @brief Enables alarm 1 or 2 and the external interrupt pin.
+          * If Alarm != 1, it assumes Alarm == 2.
+          * 
+          * @param alarmNumber set 1 or 2
+          */
+         void turnOnAlarm(uint8_t alarmNumber);
+
+         /**
+          * @brief Disables alarm 1 or 2 (default is 2 if Alarm != 1),
+         // and leaves the interrupt pin alone.
+          * 
+          * @param alarmNumber 
+          */
+         void turnOffAlarm(uint8_t alarmNumber);
+
+         /**
+          * @brief checks if alarm is enabled
+          * 
+          * @param alarmNumber 1 or 2 
+          * @return true if alarm is enabled
+          * @return false if alarm is disabled
+          */
+         bool checkAlarmEnabled(uint8_t alarmNumber);
+         
+         // Checks whether the indicated alarm (1 or 2, 2 default);
+         // has been activated. IF clearflag is set, clears alarm flag.
+         /**
+          * @brief check if alarm has triggered
+          * 
+          * @param alarmNumber 1 or 2
+          * @param clearflag clears the alarm flag (default)
+          * @return true alarm has triggered
+          * @return false has not triggered 
+          */
+         bool checkIfAlarm(uint8_t alarmNumber, bool clearflag = true);
             
 
-        // ************************************
-        //        Temperature function
-        // ************************************
-        // get temperature of the DS3231 module
-        float getTemperature();
+         // ************************************
+         //        Oscillator functions
+         // ************************************
+         // turns oscillator on or off. True is on, false is off.
+         // if battery is true, turns on even for battery-only operation,
+         // otherwise turns off if Vcc is off.
+         // frequency must be 0, 1, 2, or 3.
+         // 0 = 1 Hz
+         // 1 = 1.024 kHz
+         // 2 = 4.096 kHz
+         // 3 = 8.192 kHz (Default if frequency uint8_t is out of range);
 
-        // Alarm functions
-        void getA1Time(byte& A1Day, byte& A1Hour, byte& A1Minute, byte& A1Second, byte& AlarmBits, bool& A1Dy, bool& A1h12, bool& A1PM);
+         /**
+          * @brief Turns oscillator ON or OFF.
+          * If battery is true, turns on even for battery-only operation,
+          * otherwise turns off if Vcc is off.
+          * frequency must be 0, 1, 2, or 3.
+          * 0 = 1 Hz
+          * 1 = 1.024 kHz
+          * 2 = 4.096 kHz
+          * 3 = 8.192 kHz (Default if frequency uint8_t is out of range);
+          * 
+          * @param turnOn true to turn on false otherwise 
+          * @param onWithBattery true for battery operation also
+          * @param frequency set 0, 1, 2 or 3 to select frequency
+          */
+         void enableOscillator(bool turnOn, bool onWithBattery, uint8_t frequency);
 
-        /* Retrieves everything you could want to know about alarm
-        * one.
-        * A1Dy true makes the alarm go on A1Day = Day of Week,
-        * A1Dy false makes the alarm go on A1Day = Date of month.
-        *
-        * byte AlarmBits sets the behavior of the alarms:
-        *	Dy	A1M4	A1M3	A1M2	A1M1	Rate
-        *	X	1		1		1		1		Once per second
-        *	X	1		1		1		0		Alarm when seconds match
-        *	X	1		1		0		0		Alarm when min, sec match
-        *	X	1		0		0		0		Alarm when hour, min, sec match
-        *	0	0		0		0		0		Alarm when date, h, m, s match
-        *	1	0		0		0		0		Alarm when DoW, h, m, s match
-        *
-        *	Dy	A2M4	A2M3	A2M2	Rate
-        *	X	1		1		1		Once per minute (at seconds = 00)
-        *	X	1		1		0		Alarm when minutes match
-        *	X	1		0		0		Alarm when hours and minutes match
-        *	0	0		0		0		Alarm when date, hour, min match
-        *	1	0		0		0		Alarm when DoW, hour, min match
-        *
-        *	Note: byte AlarmBits is not explicitly cleared for the getAXTime methods to
-        *	support sequential retrieval of both alarms with the same byte AlarmBits.
-        *	Use the flag bool clearAlarmBits=True to explicitly clear byte AlarmBits on
-        *  call to getAXTime.
-        */
-
-        // Same as getA1Time();, but A2 only goes on seconds == 00.
-        void getA2Time(byte& A2Day, byte& A2Hour, byte& A2Minute, byte& AlarmBits, bool& A2Dy, bool& A2h12, bool& A2PM);
-        
-        // Same as getA1Time();, but clears byte AlarmBits.
-        void getA1Time(byte& A1Day, byte& A1Hour, byte& A1Minute, byte& A1Second, byte& AlarmBits, bool& A1Dy, bool& A1h12, bool& A1PM, bool clearAlarmBits);
-
-        // Same as getA1Time();, but clears byte AlarmBits.
-        void getA2Time(byte& A1Day, byte& A1Hour, byte& A1Minute,byte& AlarmBits, bool& A1Dy, bool& A1h12, bool& A1PM, bool clearAlarmBits);
-        
-        // Set the details for Alarm 1
-        void setA1Time(byte A1Day, byte A1Hour, byte A1Minute, byte A1Second, byte AlarmBits, bool A1Dy, bool A1h12, bool A1PM);
-        
-        // Set the details for Alarm 2
-        void setA2Time(byte A2Day, byte A2Hour, byte A2Minute, byte AlarmBits, bool A2Dy, bool A2h12, bool A2PM);
-        
-        // Enables alarm 1 or 2 and the external interrupt pin.
-        // If Alarm != 1, it assumes Alarm == 2.
-        void turnOnAlarm(byte Alarm);
-
-        // Disables alarm 1 or 2 (default is 2 if Alarm != 1);
-        // and leaves the interrupt pin alone.
-        void turnOffAlarm(byte Alarm);
-        
-        // Returns T/F to indicate whether the requested alarm is
-        // enabled. Defaults to 2 if Alarm != 1.
-        bool checkAlarmEnabled(byte Alarm);
-        
-        // Checks whether the indicated alarm (1 or 2, 2 default);
-        // has been activated. Always clears flag.
-        bool checkIfAlarm(byte Alarm);
-        
-        // Checks whether the indicated alarm (1 or 2, 2 default);
-        // has been activated. IF clearflag is set, clears alarm flag.
-        bool checkIfAlarm(byte Alarm, bool clearflag);
-            
-
-        // ************************************
-        //        Oscillator functions
-        // ************************************
-
-        // turns oscillator on or off. True is on, false is off.
-        // if battery is true, turns on even for battery-only operation,
-        // otherwise turns off if Vcc is off.
-        // frequency must be 0, 1, 2, or 3.
-        // 0 = 1 Hz
-        // 1 = 1.024 kHz
-        // 2 = 4.096 kHz
-        // 3 = 8.192 kHz (Default if frequency byte is out of range);
-        void enableOscillator(bool TF, bool battery, byte frequency);
-        
-        // Turns the 32kHz output pin on (true); or off (false).
-        void enable32kHz(bool TF);
-        
-        // Checks the status of the OSF (Oscillator Stop Flag);.
-        // If this returns false, then the clock is probably not
-        // giving you the correct time.
-        // The OSF is cleared by function setSecond();.
-        bool oscillatorCheck();
+         /**
+          * @brief Switch ON the 32kHz output pin (true); or off (false)
+          * 
+          * @param activate32kHz 
+          */
+         void enable32kHz(bool activate32kHz);
+         
+         /**
+          * @brief Checks the status of the Oscillator Stop Flag (OSF).
+          * If this returns false, then the clock is probably not
+          * giving you the correct time.
+          * The OSF is cleared by function setSecond().
+          * 
+          * @return true if oscillator is running.
+          * @return false if oscillator has stopped
+          */
+         bool oscillatorCheck();
 
 
-    private:
-        // the getter functions retrieve current values of the registers.
-        byte getRegisterValue() {
-            _Wire.requestFrom(CLOCK_ADDRESS, 1);
-            return bcdToDec(_Wire.read());
-        }
-
-        // Convert normal decimal numbers to binary coded decimal
-        byte decToBcd(byte val);
-        // Convert binary coded decimal to normal decimal numbers
-        byte bcdToDec(byte val);
-
-
-    protected:
-        // Read selected control byte: (0); reads 0x0e, (1) reads 0x0f
-        byte readControlByte(bool which);
-        
-        // Write the selected control byte.
-        // which == false -> 0x0e, true->0x0f.
-        void writeControlByte(byte control, bool which);		
-};
+      private:
+         /**
+         * @brief optional adapter used for Arduino TwoWire integration
+         * 
+         */
+#if DS3231_RTC_HAS_WIRE
+         TwoWireAdapter _wire_adapter;
 #endif
+
+         /**
+         * @brief abstracted bus implementation used by this instance
+         * 
+         */
+         BusInterface *_bus;
+
+         BusInterface &bus() { return *_bus; }
+
+         /**
+          * @brief the getter functions retrieve current values of the registers.
+          * 
+          * @return uint8_t register value
+          */
+         uint8_t getRegisterValue() {
+            bus().requestFrom(DS3231_Constants::DS3231_I2C_ADDRESS, 1);
+            return DS3231_Tools::bcdToDec(static_cast<uint8_t>(bus().read()));
+         }
+
+         /**
+          * @brief write register address to bus from which to read from
+          *
+          * @param register_addr address of DS3231 register
+          */
+         void selectRegister(uint8_t register_addr);
+
+         /**
+          * @brief 
+          * 
+          * @param register_addr address of DS3231 register
+          * @return uint8_t 
+          */
+         uint8_t readRegisterRaw(uint8_t register_addr);
+
+         /**
+          * @brief write value into DS3231 register 
+          * 
+          * @param register_addr address of DS3231 register
+          * @param value value to write in register
+          */
+         void writeRegister(uint8_t register_addr, uint8_t value);
+
+
+      protected:
+         /**
+          * @brief Read selected control byte. 
+          * 
+          * @param which (0) reads 0x0e, (1) reads 0x0f
+          * @return uint8_t control byte
+          */
+         uint8_t readControlByte(bool which);
+
+         /**
+          * @brief write control byte
+          * 
+          * @param control byte to write
+          * @param which (0) writes 0x0e, (1) writes 0x0f
+          */
+         void writeControlByte(uint8_t control, bool which);
+   };
+#pragma endregion DS3231
+}
